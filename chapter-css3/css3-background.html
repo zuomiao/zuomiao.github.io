@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>CSS3 - 背景激变绘图</title>
+		<meta name="author" content="http://www.xdnote.com/" />
+		<style>
+   			/*这次用CSS3搞个背景 */ 
+			body {
+				padding: 0;
+				margin: 0;
+			}
+			body div{
+			 	width: 50%;
+			 	height: 50%;
+			 	float:left;
+			}
+			/***
+			* 恭喜你看到这个页面，你可能已经看到了4个比较粗糙的背景，如果你做一个页面，可能会想用4张图片就搞了，这里我用CSS3做背景，就和以往一样，这个页面没有半张图片。
+			*
+			* linear-gradient 线性渐变 (direction, color-stop1,  color-stop2, ...);
+			* radial-gradient 倾向渐变 (center, shape size, start-color, ..., last-color);
+  radial-gradient( [[ circle               || <length> ]                     [ at <position> ]? , | 
+                    [ ellipse              || [<length> | <percentage> ]{2}] [ at <position> ]? , |
+                    [ [ circle | ellipse ] || <extent-keyword> ]             [ at <position> ]? , |
+                                                                               at <position> ,     <color-stop> [ , <color-stop> ]
+                                 Definition of the contour, size and position of the ending shape         List of color stops  
+    
+          where <extent-keyword> = closest-corner | closest-side | farthest-corner | farthest-side
+            and <color-stop> = <color> [ <percentage> | <length> ]?
+			* repeating-linear-gradient 线性渐变 repeat 版
+			* repeating-radial-gradient 倾向渐变 repeat 版
+			* background-size   背景色大小
+			* background-origin 背景颜色开始位置 padding-box/border-box/content-box
+			* background-clip   背景图片开始位置 padding-box/border-box/content-box
+			*/
+
+			/**
+			*DEMO1:功能示例;
+			*/
+			div:first-child{
+				background-color: green;
+				background-image: repeating-linear-gradient(100deg,white 30px,transparent, red 150px,yellow,blue,grey,transparent); 
+				background-size:50% 50%;
+			}
+			/**
+			*DEMO2:巧用多个渐变与background-size叠加出各种纹理;比如暗亮相间的菱形方块
+			* 1.画个草图，或者直接拍照，看墙上的图案，有方的，有长方的，我这里确定宽度60，高度120(确定background-size)
+			*	顺了个便，这个60*120，根据正余弦定理＝0.894，再查了一下余弦表角度于63-64之间
+					这里发现到了年纪，各种公式全数尽忘，还要去Google一下余弦的公式，郁闷死也
+			* 2.确认背景色（绿色的砖头）
+			* 3.使用零渐变，即起点和终点在同一位置上，或是终点一的色与终点二的色完全一样，就不会有渐变效果。再使用角度旋转方向，则可以在头左和尾右各弄一个三角形，
+			* 4.同样，再加一个渐变，在头右和尾左各弄一个三角形，即成了一个地板式的纹理
+			* 5.加点小杂边，添点效果
+			*/
+			div:nth-child(2){
+			   background-color: green; 
+			   background-image:
+			   linear-gradient(63.5deg, darkgreen 25%, transparent 25%, transparent 75%, darkgreen 75%, darkgreen),
+			   linear-gradient(116.5deg, darkgreen 25%, transparent 25%, transparent 75%, darkgreen 75%, darkgreen),
+			   repeating-linear-gradient(63.5deg, black , black 1px, transparent 1px, transparent 55px),
+			   repeating-linear-gradient(116.5deg, black , black 1px, transparent 1px, transparent 55px);
+			   background-size: 60px 120px; 
+			}
+			/**
+			* DEMO3:光圈。尝一刀CSS3的NTH选择器，2N+1会使第一个DIV也中招
+			*/
+			div:nth-child(3n){
+				transition:all 1s;
+				background-image:
+				radial-gradient(circle,firebrick 50px,transparent 100px, gold 150px,lightgray 200px,transparent);
+			}
+			div:nth-child(2n+1):hover{
+				background-origin:border-box; 
+				background-image:
+				radial-gradient(circle,darkred 50px,transparent 100px, gold 150px,transparent 200px,ivory);
+			}
+			/**
+			* DEMO4:多背景，DEMO2已经示例过一个多背景了，这里再多用下
+			*/
+			div:last-child{
+				background:
+					radial-gradient(green 10px,transparent,white),
+					radial-gradient(red 15px,transparent,white),
+					radial-gradient(blue 20px,transparent,white),
+					radial-gradient(yellow 25px,transparent,white);
+				background-position:20px 20px, 100px 130px, 130px 10px, 10px 130px;
+				background-repeat: no-repeat;
+				background-size: 100px 100px, 100px 60px, 80px 40px,60px 80px;
+				background-color: white;
+			}
+		</style>
+	</head>
+	<body><div></div><div></div><div></div><div></div></body>
+</html>

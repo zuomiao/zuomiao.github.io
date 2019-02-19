@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>x Video HTML5 视频</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-x Video HTML5 视频">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+	<style type="text/css">
+		.videobox{
+			width: 100%;
+		}
+		.videobox .statusbox,.videobox .crotrolbox{
+			width: 100%;
+			height: 30px;
+			line-height: 30px;
+			font-size: 24px;
+			opacity: 0.5;
+			position: relative;
+			background-color: #0086B3;
+			color: #FAFAFA;
+		}
+		.videobox .videoplay{
+			width: 100%;
+			border: 0;
+			margin-top: -30px;
+		}
+		.videobox .crotrolbox{
+			margin-top: -36px;
+		}
+	</style>
+</head>
+<body>
+<div class="wrapper markdown-body">
+	
+<h1>X VIDEO</h1>
+
+
+<div class="videobox">
+	<div class="statusbox">as</div>
+	<video class="videoplay"  preload="auto" id="xVideo" src="http://media.caiyun.feixin.10086.cn/StorageWeb/servlet/GetFileByURLServlet?dm=D984&root=/mnt/wfs8&pt=/d5d/52&fileid=77d5d526d836506a380d6d27426a83a890.MP4&type=52&ui=13710345732&ci=0109H7dN120423320140803115108vag&cn=%E8%8B%B1%E9%9B%84%E7%AC%AC2%E5%AD%A3+-+%E7%AC%AC09%E9%9B%86&ct=3&time=1408171504&exp=32597&code=99226D95BBA307EE06FD22C936A8257030AE1EC096D9F8E021F810277FC7D44C&ec=0"></video>
+	<div class="crotrolbox"><span onclick="pause()">pause</span></div>
+</div>
+<script>
+	var videoUrl ='http://media.caiyun.feixin.10086.cn:80/StorageWeb/servlet/GetFileByURLServlet?dm=D984&root=/mnt/wfs8&pt=/d5d/52&fileid=77d5d526d836506a380d6d27426a83a890.MP4&type=52&ui=13710345732&ci=0109H7dN120423320140803115108vag&cn=%E8%8B%B1%E9%9B%84%E7%AC%AC2%E5%AD%A3+-+%E7%AC%AC09%E9%9B%86&ct=3&time=1408171504&exp=32597&code=99226D95BBA307EE06FD22C936A8257030AE1EC096D9F8E021F810277FC7D44C&ec=0';
+	
+	
+	var xdVideo = function(url,videoname){
+		this.containerid = 'video_' + Date.now();
+		this.videoname = videoname;
+		this.build();
+	}
+	xdVideo.prototype = {
+		videoname:'',
+		containerid:'',
+		
+		div_container:null,
+		div_name:null,
+		div_time:null,
+		btn_play:null,
+		btn_plause:null,
+		tol_press:null,
+		tol_vol:null,
+		btn_fullscreen:null,
+		
+		build:function(){
+			
+		}
+		
+	}
+	new xdVideo(videoUrl);
+	
+function listenTouthStart(e){
+	console.log('listenTouthStart');
+}
+function listenTouthMove(e){
+	console.log('listenTouthMove');
+}
+function listenTouthEnd(e){
+	console.log('listenTouthEnd');
+}
+var te = document.getElementById('touth');
+te.addEventListener('touchstart',listenTouthStart,false);
+te.addEventListener('touchmove',listenTouthMove,false);
+te.addEventListener('touchend',listenTouthEnd,false);
+
+//	var v = document.getElementById('xVideo');
+//	function onProgressEvt(e){
+//		console.log(e);
+//	}
+//	
+	
+//currentSrc		当前播放的视频地址
+//currentTime		当前已播放时长（可以通过此属性修改进度条的点）
+//videoWidth		宽度
+//videoHeight		高度
+//duration			总时长
+//ended				是否已经结束
+//error				错误信息
+//paused			是否暂停了
+//muted				是否静音了
+//seeking			是否正在寻址（跳到其它地方）
+//volume			音量大小0-1
+	
+	
+//	v.addEventListener('play',onProgressEvt,false);				// 	当音频/视频已开始或不再暂停时
+//	v.addEventListener('pause',onProgressEvt,false);			//  当音频/视频已暂停时
+//	v.addEventListener('progress',onProgressEvt,false);			// 	当浏览器正在下载音频/视频时
+//	v.addEventListener('error',onProgressEvt,false);			//返回表示音频/视频错误状态的 MediaError 对象
+//	v.addEventListener('timeupdate',onProgressEvt,false);		//当目前的播放位置已更改时
+//	v.addEventListener('ended',onProgressEvt,false);			//返回音频/视频的播放是否已结束
+//	v.addEventListener('abort',onProgressEvt,false);			//当音频/视频的加载已放弃时
+//	v.addEventListener('emptied',onProgressEvt,false);			//当目前的播放列表为空时
+//	v.addEventListener('waiting',onProgressEvt,false);			//当视频由于需要缓冲下一帧而停止
+//	v.addEventListener('loadedmetadata',onProgressEvt,false);	//当浏览器已加载音频/视频的当前帧时
+//	v.addEventListener('ratechange',onProgressEvt,false);	//当浏览器已加载音频/视频的当前帧时
+	
+//	volumechange		音量变化时
+//	stalled				当浏览器尝试获取媒体数据，但数据不可用时
+//	seeking				正在跳到新的点
+//	seeked				已经跳到新的点
+//	ratechange			 当音频/视频的播放速度已更改时
+	function pause(){
+		v.pause();
+	}
+	
+</script>
+
+<script>
+
+//autoplay 	autoplay 	如果出现该属性，则视频在就绪后马上播放。
+//controls 	controls 	如果出现该属性，则向用户显示控件，比如播放按钮。
+//height 	pixels 	设置视频播放器的高度。
+//loop 	loop 	如果出现该属性，则当媒介文件完成播放后再次开始播放。
+//preload 	preload 	如果出现该属性，则视频在页面加载时进行加载，并预备播放。
+//如果使用 "autoplay"，则忽略该属性。
+//src 	url 	要播放的视频的 URL。
+//width 	pixels 	设置视频播放器的宽度。
+	/**
+	 * @param {object|string} url
+	 * 		播放地址 如果是object则可以给出具体 ogg,webm,mp4地址
+	 * 				格式{
+	 * 					ogg:string,
+	 * 					mp4:string,
+	 * 					webm:string
+	 * 					}
+	 * @param {boolean} autoplay
+	 * 		是否自动播放 默认为FALSE
+	 * 
+	 * */
+	
+	/**
+	 * 样式控制：
+	 * 播放/暂停
+	 * 标题/视频信息
+	 * 
+	 * 音量控制
+	 * 全屏控制
+	 * 上一首一下首
+	 * 
+	 * 关灯
+	 * */
+
+	
+//currentSrc
+//currentTime
+//videoWidth
+//videoHeight
+//duration
+//ended
+//error
+//paused
+//muted
+//seeking
+//volume
+//paused
+//muted
+
+//play
+//pause
+//load
+//canPlayType
+
+
+//play
+//pause
+//progress
+//error
+//timeupdate
+//ended
+//abort
+//empty
+//emptied
+//waiting
+//loadedmetadata
+</script>
+
+
+</html>

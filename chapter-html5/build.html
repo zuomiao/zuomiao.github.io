@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"
+  <title>前端搭建个人记录</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-一个小小的压缩方案">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div>
+	<h1>典型个人小项目环境搭建<small>个人小记录，可参考，勿随意模仿</small></h1>
+	<p>
+		网页架构：
+		requirejs + bootstrap + jquery
+		理由
+		requireJs 模块化可以使前端模块非常清晰
+		bootstrap 基本能满足大量排版需求
+		jquery    这个不用说，而且 bootstarp的js组件库也基于jquery,完美支持requireJS,插件多
+		
+		http://requirejs.org/
+		http://www.bootcss.com/
+		http://jquery.com/
+		只算核心的话，三个框架大约100多K，算较轻，扩展也相当容易。如果不要weiget,基本属于万能了。
+	</p>
+	<p>
+		CSS环境安装：ruby + sass + compass + bootstarp
+		一.Ruby on rails 
+		http://rubyonrails.org/
+		1.下载
+		2.安装
+		3.配置环境变量
+		4.检查  gem -v
+		
+		二.Sass
+		http://www.sass-lang.com/
+		1.安装  gem install sass
+		2.检查 sass -v
+		
+		三.compass
+		http://compass-style.org/
+		1.安装 
+			gem update --system
+			gem install compass
+		2.检查
+			compass -v
+		
+		四.bootstrap
+		https://github.com/twbs/bootstrap-sass
+		1.安装
+			gem install bootstrap-sass
+		2.导入
+			# config.rb:
+		require 'bootstrap-sass'
+	</p>
+	<p>
+		JavaScript环境安装： nodejs + requirejs
+		1.安装nodejs，下载个安装包，一直下一步即可
+		2.npm install -g requirejs
+		3.window系统需要再执行命令让r.js生效
+		DOSKEY r.js=r.js.cmd $*
+		相比传统的YUICOMPRESS压缩，requirejs自带的r.js非常方便，不用自己去维护需呀压缩的脚本文件列表，如果在一个页面多引入了几个JS完全不需呀修改任何脚本
+		4.
+	</p>
+	
+	<p>
+		让一切自动化
+		
+		这么多的东西，是不是要脑补一下呢，其实不用，就当是个工具而已，开发就和
+	</p>
+	<p>后端参考 maven</p>
+	
+	
+	
+</div>
+
+
+</html>

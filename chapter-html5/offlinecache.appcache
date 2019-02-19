@@ -1,0 +1,5 @@
+CACHE MANIFEST
+#version 1.0.1
+../stylesheets/stylesheet.css
+../javascripts/jquery.min.js
+../javascripts/script.js

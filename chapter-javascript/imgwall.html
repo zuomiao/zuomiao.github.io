@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!--
+        	作者：ada87@163.com
+        	时间：2014-10-17
+        	描述：
+		  <title>IMGWALL-移动设备上的图片墙，基于hammaer.js</title>
+        -->
+		  <meta name="author" content="http://www.xdnote.com/" />
+		  <meta name="description" content="X.D的试验室-移动设备上的图片墙">
+		  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+		  <meta name="msapplication-tap-highlight" content="no" />
+
+		  <script src="../javascripts/hammer.min.js" type="text/javascript"></script>
+		  <script src="../javascripts/ImgWall.js" type="text/javascript"></script>
+		  <style>
+		  	.iw_container{
+		  		position: absolute;
+		  		top: 0;
+		  		left: 0;
+		  		width: 100%;
+		  		height: 100%;
+		  		font-size: 1.8em;
+		  		display: none;
+		  	}
+		  	.iw_container .iw_header,
+		  	.iw_container .iw_footer{
+		  		position: absolute;
+		  		display: block;
+		  		background-color: #4b4b4b;
+		  		color: #fff;
+		  		padding: 0;
+		  		margin: 0;
+		  		opacity: 0.5;
+		  		height: 2em;
+		  		line-height: 2em;
+		  		width: 100%;
+		  		z-index:999;
+		  		text-align: center;
+		  		overflow: hidden;
+		  	}
+		  	.iw_container .iw_header .iw_close{
+		  		padding-left: 0.5em;
+		  		float: left;
+		  	}
+		  	.iw_container .iw_header .iw_title{
+			    display: block;
+			    height: 100%;
+			    margin-left: 20%;
+			    overflow: hidden;
+			    position: absolute;
+			    text-align: center;
+			    width: 60%;
+		  	}
+		  	.iw_container .iw_footer{
+		  		bottom: 0;
+		  		text-align:center;
+		  	}
+		  	.iw_container .iw_footer div{
+		  		height: 100%;
+		  		width: 49%;
+		  		text-align:center;
+		  		color: #ffffff;
+		  		display: inline-block;
+		  		border-left: 1px solid #D1D1D1;
+		  	}
+		  	.iw_container .iw_footer div.iw_frist{
+		  		border-left: none;
+		  	}
+		  	.iw_container .iw_wall{
+		  		background-color: #666666;
+			    height: 100%;
+			    width: 100%;
+			    overflow: hidden;
+		  	}
+		  	.iw_container .iw_wall .iw_wall_ct{
+		  		height: 100%;
+		  		display: block;
+		  	}
+		  	.iw_container .iw_wall .iw_wall_ct .iw_img{
+			    float: left;
+			    height: 100%;
+			    overflow: hidden;
+		  	}
+		  	.iw_container .iw_wall .iw_wall_ct .iw_img div{
+			    background-size:contain;
+		  		background-position: center center ;
+		  		background-repeat: no-repeat;
+			    height: 100%;
+			    width: 100%;
+		  	}
+		  </style>
+	</head>
+	<body>
+		<div id="imgWall" class="adf"></div>
+		<div id="open_imgwall" style="font-size:3em;margin: 550px auto 400px;width: 60%; border: 1px solid #000080; padding: 1em;" onclick="imgWall.open()">打开图片</div>
+		<script type="text/javascript">
+			var testFiles = [
+				{
+					imgUrl:'../images/iw/iw1.jpg',
+					imgTitle:'abc.jpg',
+					size:'310KB'
+				},
+				{
+					imgUrl:'../images/iw/iw2.jpg',
+					imgTitle:'照片.png',
+					size:'470KB'
+				},
+				{
+					imgUrl:'../images/iw/iw3.jpg',
+					imgTitle:'def.jpg',
+					size:'1.2MB'
+				},
+				{
+					imgUrl:'../images/iw/iw4.jpg',
+					imgTitle:'照片2.png',
+					size:'2MB'
+				},
+				{
+					imgUrl:'../images/iw/iw5.jpg',
+					imgTitle:'照片3.png',
+					size:'15KB'
+				},
+				{
+					imgUrl:'../images/iw/iw6.jpg',
+					imgTitle:'照片6.png',
+					size:'15KB'
+				}
+			];
+			/**
+			 * config 定义 
+			 * 		
+			 * 		id				:		容器ID
+			 * 		data			:		图片数据：至少包括图片地址
+			 * 		scale			:		是否可放大缩小，默认true
+			 * 		rotate			:		是否可旋转,默认false,只有开启scale的情况下才能开启rotate
+			 * 		evt_Open		:		打开时的方法,也可以通过onOpen(fn)设置
+			 * 		evt_Close		:		关闭时的方法，也可以通过onBack(fn)设置
+			 * 		evt_Switch		:		切换时的方法，也可以通过onSwitch(fn)设置
+			 * 		auto_open		:		是否自动打开，默认为true
+			 * */
+			var imgWall = new ImgWall({
+				'id':'imgWall',
+				'data': testFiles,
+				auto_open:false,
+				evt_Switch:function(data){
+					upSize(data);
+				},
+				evt_Open:function(){
+					upSize(testFiles[0]);
+				},
+				evt_Close:function(){
+				}
+			});
+			
+			var upSize = function(data){
+				document.getElementById('btn_down').innerHTML='下载(' + data.size + ')';
+			}
+			
+			var downAction=function(evt,data){
+				console.log(data);
+			}
+			var shareAction=function(evt,data){
+				console.log(data);
+			}
+			imgWall.addAction('<span id="btn_down" class="custom_style">下载</span>',downAction);
+			imgWall.addAction('分享',shareAction);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>HTML 移动设备的touth事件</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-HTML 移动设备的touth事件">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+<div id="touth">da</div>
+</div>
+</body>
+<script>
+function listenTouthStart(e){
+	console.log('listenTouthStart');
+}
+function listenTouthMove(e){
+	console.log('listenTouthMove');
+}
+function listenTouthEnd(e){
+	console.log('listenTouthEnd');
+}
+var te = document.getElementById('touth');
+te.addEventListener('touchstart',listenTouthStart,false);
+te.addEventListener('touchmove',listenTouthMove,false);
+te.addEventListener('touchend',listenTouthEnd,false);
+</script>
+</html>

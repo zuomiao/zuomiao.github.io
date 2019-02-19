@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CSS3:transform旋转，偏移</title>
+<meta name="author" content="http://www.xdnote.com/" />
+<style>
+.container{
+	width: 1000px;
+	height: 600px;
+	margin: 0 auto;
+}
+.crotrol{
+	float: left;
+	width: 400px;
+	height: 600px;
+	overflow: hidden;
+}
+.crotrol ul{
+
+}
+.crotrol li{
+	list-style: none;
+	height: 30px;
+	line-height: 30px;
+}
+.crotrol input{
+	width: 200px;
+}
+#target{
+	float: left;
+	margin: 200px 150px;
+	width:200px;
+	height:60px;
+	background: linear-gradient(90deg,orange,green);
+	background: -moz-linear-gradient(90deg, green, yellow);
+	background: -webkit-linear-gradient(90deg, green, yellow);
+	border:1px solid black;
+	/**这里说明一下，多个transform用空格分开，本DEMO就不做判断直接覆盖了，如果要多个效果同时用就在JS里面多判断一下吧**/
+	transform:rotate(20deg) scale(2);
+	transition: all 1s;
+}
+</style>
+
+<script>
+function setStyle(key,value){
+	document.getElementById('target').style.transform = key+'(' + value + ')';
+	document.getElementById('target').style.webkitTransform = key+'(' + value + ')';
+	document.getElementById('target').style.msTransform = key+'(' + value + ')';
+	document.getElementById('target').style.MozTransform = key+'(' + value + ')';
+	document.getElementById('target').style.OTransform = key+'(' + value + ')';
+}
+
+function rotate(value){
+	setStyle('rotate',value + 'deg');
+}
+function rotateX(value){
+	setStyle('rotateX',value + 'deg');
+}
+function rotateY(value){
+	setStyle('rotateY',value + 'deg');
+}
+function rotateZ(value){
+	setStyle('rotateZ',value + 'deg');
+}
+
+function translateX(value){
+	setStyle('translateX',value + 'px');
+}
+function translateY(value){
+	setStyle('translateY',value + 'px');
+}
+function translateZ(value){
+	setStyle('translateZ',value + 'px');
+}
+
+function scale(value){
+	setStyle('scale',value);
+}
+function scaleX(value){
+	setStyle('scaleX',value);
+}
+function scaleY(value){
+	setStyle('scaleY',value);
+}
+function scaleZ(value){
+	setStyle('scaleZ',value);
+}
+
+function skewX(value){
+	setStyle('skewX',value + 'deg');
+}
+function skewY(value){
+	setStyle('skewY',value + 'deg');
+}
+</script>
+
+</head>
+<body>
+<div class="container">
+<div class="crotrol">
+<ul>
+<li>旋转</li>
+<li>rotate <input type="range" min="0" max="360" onchange="rotate(this.value)" /></li>
+<li>rotateX <input type="range" min="0" max="360" onchange="rotateX(this.value)" /></li>
+<li>rotateY <input type="range" min="0" max="360" onchange="rotateY(this.value)" /></li>
+<li>rotateZ  <input type="range" min="0" max="360" onchange="rotateZ(this.value)" /></li>
+<li>移动</li>
+<li>translateX  <input type="range" min="-100" max="100" onchange="translateX(this.value)" /></li>
+<li>translateY  <input type="range" min="-100" max="100" onchange="translateY(this.value)" /></li>
+<li>translateZ  <input type="range" min="-100" max="100" onchange="translateZ(this.value)" /></li>
+<li>缩放</li>
+<li>scale  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scale(this.value)" /></li>
+<li>scaleX  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleX(this.value)" /></li>
+<li>scaleY  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleY(this.value)" /></li>
+<li>scaleZ  <input type="range" min="0" max="5" value="1" step="0.1" onchange="scaleZ(this.value)" /></li>
+<li>倾斜</li>
+<li>skewX  <input type="range" min="-360" max="360" onchange="skewX(this.value)" /></li>
+<li>skewY  <input type="range" min="-360" max="360" onchange="skewY(this.value)" /></li>
+<li>也可以使用matrix混合这四种属性</li>
+
+</ul>
+</div>
+<div id="target">基础知识，不多解释，参考网上CSS3手册，或看本页面源码。适合做各种特效。</div>
+</div>
+<p></p>
+
+</body>
+</html>

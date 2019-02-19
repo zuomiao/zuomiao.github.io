@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>Promise规范 (jQuery)</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-Promise规范">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+  <pre><code>$(document).ready(function() {
+    var asyncTask = function(index) {
+        console.log('开始执行任务: '+index);
+        var exeTime = Math.ceil(Math.random()*10000);
+        var result = exeTime%3;
+        var dfd = $.Deferred();
+        setTimeout(function() {
+            if (result == 0) {
+                dfd.resolve('任务' + index + '执行成功,执行时间：' + (exeTime/1000) , {message:'ok'}); // 状态 resolve
+            } else if (result == 1) {
+                dfd.reject('任务' + index + '执行失败,执行时间：' + (exeTime/1000)); // 状态 reject
+            }else {
+                dfd.notify('任务' + index + '执行警告,执行时间：' + (exeTime/1000)); // 状态 notify
+            }
+        }, exeTime); 
+        return dfd; 
+    }
+    
+    function resolve (result , obj) {
+        console.info(result + obj.message);
+    }
+    function reject (result) {
+        console.error(result);
+    }
+    function notify (result) {
+        console.warn(result);
+    }
+
+    for (var i=1; i&lt;=100; i++) {
+        asyncTask(i).then(resolve, reject, notify); 
+    }
+});
+  </code></pre>
+  <p>异步处理回调规范（http://wiki.commonjs.org/wiki/Promises/A）：任务状态：未完成（unfulfilled）、完成（fulfilled）、失败（failed）；效果可以打开开发者工具查看</p>
+<script type="text/javascript">
+$(document).ready(function() {
+    var asyncTask = function(index) {
+        console.log('开始执行任务: '+index);
+        var exeTime = Math.ceil(Math.random()*10000);
+        var result = exeTime%3;
+        var dfd = $.Deferred(); // 获得一个 Deferred 实例
+        setTimeout(function() {
+            if (result == 0) {
+                dfd.resolve('任务' + index + '执行成功,执行时间：' + (exeTime/1000) , {message:'ok'}); // 状态 resolve
+            } else if (result == 1) {
+                dfd.reject('任务' + index + '执行失败,执行时间：' + (exeTime/1000)); // 状态 reject
+            }else {
+                dfd.notify('任务' + index + '执行警告,执行时间：' + (exeTime/1000)); // 状态 notify
+            }
+        }, exeTime); 
+        return dfd; 
+    }
+    
+    function resolve (result , obj) {
+        console.info(result + obj.message);
+    }
+    function reject (result) {
+        console.error(result);
+    }
+    function notify (result) {
+        console.warn(result);
+    }
+
+    for (var i=0; i<100; i++) {
+        asyncTask(i).then(resolve, reject, notify); 
+    }
+});
+</script>
+</div>
+</html>

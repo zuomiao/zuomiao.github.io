@@ -1,0 +1,6 @@
+# Don't use baidu!
+User-agent: Baiduspider
+Disallow: /
+User-agent: *
+Disallow: 
+Sitemap: http://www.xdnote.com/sitemap.xml

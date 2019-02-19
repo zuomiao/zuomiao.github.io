@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>帆布指纹</title>
+	  	<meta name="author" content="http://www.xdnote.com/" />
+	  	<meta name="description" content="X.D的试验室-帆布指纹">
+	  	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	</head>
+	<body>
+	</body>
+			<script>
+			function bin2hex(str){
+				return escape(str).split(/(?:%u|%)/).slice(1).join('');
+			};
+			var canvas = document.createElement('canvas');
+			var ctx = canvas.getContext('2d');
+			var txt = 'http://www.xdnote.com/';
+			ctx.textBaseline = "top";
+			ctx.font = "14px 'Arial'";
+			ctx.textBaseline = "xdnote";
+			ctx.fillStyle = "#f60";
+			ctx.fillRect(125,1,62,20);
+			ctx.fillStyle = "#069";
+			ctx.fillText(txt, 2, 15);
+			ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+			ctx.fillText(txt, 4, 17);
+			var b64 = canvas.toDataURL().replace("data:image/png;base64,","");
+			var bin = atob(b64);
+			console.log(bin.slice(-16));
+			var crc = bin2hex(bin.slice(-16,-12));
+			console.log(crc);
+		</script>
+</html>

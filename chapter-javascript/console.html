@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+
+  <title>Console 简单说明</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-Console 简单说明">
+</head>
+<body>
+</script>
+<div class="wrapper markdown-body">
+  <h1>Console 简单说明</h1>
+  <h3>花招1:使用克隆重写Console</h3>
+  <p>
+    由于console是window对象,也就是浏览器本身对象,所以如果想要使用super.method()去扩展是不可能的,很容易造成无限循环.刚刚玩个花样,使用两个临时对象克隆扩展了一下console.log()方法,可以自己打开
+  </p>
+    占位符
+    %s  字符串
+    %d  number类型
+    %i  number类型(int)
+    %f  number类型(float)
+    %o  DOM元素
+    %O  JavaScript对象
+    %c  CSS样式声明
+
+
+
+    Event:
+    mouse   "mousedown", "mouseup", "click", "dblclick", "mousemove", "mouseover", "mouseout", "mousewheel"
+    key     "keydown", "keyup", "keypress", "textInput"
+    touch   "touchstart", "touchmove", "touchend", "touchcancel"
+    control "resize", "scroll", "zoom", "focus", "blur", "select", "change", "submit", "reset"
+
+    console.assert(expression, object)
+    console.clear()
+
+    console.count(label)
+    console.debug(object [, object, ...])
+
+    console.dir(object)
+    console.dirxml(object)
+
+    console.error(object [, object, ...])
+    console.group(object[, object, ...])
+    console.groupCollapsed(object[, object, ...])
+    console.groupEnd()
+    console.info(object [, object, ...])
+    console.log(object [, object, ...])
+
+    console.profile([label])
+    console.profileEnd()
+
+    console.time(label)
+    console.timeEnd(label)
+    console.timeStamp([label])
+    console.trace()
+
+    console.warn(object [, object, ...])
+    debugger
+
+  <script type="text/javascript">
+  function cloneConsole() {
+      var clone = {};
+      clone.log = console.log;
+      return clone;
+  }
+
+  var winconsole = cloneConsole();
+  var tmpconsole = cloneConsole();
+  winconsole.log(2);
+  console = window.console = {};
+  tmpconsole.log = function(str){
+    winconsole.log('%c   :'+str,'color:blue;font-size:16px;background-color:#cccccc;background-image:url("http://www.xdnote.com/favicon.ico");background-repeat:no-repeat;');
+  }
+  console = tmpconsole;
+  console.log('哈哈');
+  </script>
+</div>
+console.memory
+table
+timeline
+</html>
+
+793000000
+ 10000000
+ 10600000

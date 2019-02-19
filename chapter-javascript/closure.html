@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+
+  <title>闭包</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-闭包">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<script type="text/javascript">
+</script>
+<div class="wrapper markdown-body">
+  <h1>闭包</h1>
+  <p>
+    听说Java8会有个特性“闭包”，由于听说的次数有点多，就默认是个了不起的特性吧，上网一搜，发现JavaScript早就支持，更可笑的是是，这种JavaScript式的闭包代码看上去十分眼熟，当然别人说的用闭包的都是高手，但目前我来看，以前看到的“闭包”基本都是菜鸟写的，乱写一通居然用到了个高级功能，但代码阅读就有很大难度、调试也费神，虽然功能实现但实在让人高兴不起来。
+  </p>
+  <p>COPY下概念，至于你能不能理解，反正我只看这个是理解不了。「闭包」，是指拥有多个变量和绑定了这些变量的环境的表达式（通常是一个函数），因而这些变量也是该表达式的一部分。</p>
+<pre>
+<code>function closure(){
+  x = 100;
+}
+closure();
+alert(x);</code>
+</pre>
+<p>
+  常规理解，这个x应该是打不出来的，但JavaScript就打出来了，所以这就是一个最简单的闭包，也是个人早期被JavaScript搞的狂吐的特性之一。
+</p>
+<script type="text/javascript">
+function closure(){
+  n = 100;
+  return function(){return n}
+}
+var fn = closure();
+alert(n);
+n = 50;
+var s = fn() - 1;
+alert(s);
+alert(n);
+fn = closure();
+alert(n);
+n = 30;
+s = fn() - 1;
+alert(s);
+alert(n);
+</script>
+</div>
+</html>

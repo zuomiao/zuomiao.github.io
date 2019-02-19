@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+
+  <title>Sudoku 计算</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室 Sudoku 计算">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style type="text/css">
+  	.markdown-body table{
+  		width: 272px;
+  		height: 270px;
+  	}
+  	.markdown-body  table tr td{
+  		width: 28px;
+  		height: 26px;
+  		border: 1px solid #666666;
+  		padding: 0;
+  		line-height: 26px;
+  		font-size: 24px;
+  		text-align: center;
+  		overflow: hidden;
+
+  	}
+  	.markdown-body table td:first-child{
+  		width: 30px;
+  		padding: 0;
+  	}
+  </style>
+</head>
+<body>
+<div class="wrapper markdown-body">
+  <p>Sudoku这游戏非常过瘾，最好还是用老式的NOKIA手机玩，比智能手机体验还好。无聊间，想写个推算程序，目前还没完工，不过可以推送一些，详情见控制台输出与源代码</p>
+  <p>说明一下：最初的想法是分三个阶段计算：开发时发现就一个阶段也很快可以把结果计算出来，出于技术爱好，还是按原想法写了下，可惜代码都不怎么体面。</p>
+  <pre>
+  	1.计算行、列、宫内，可以完全确定的数字。比如 40 62 13 26 都为数字 1 则可以确定 01 位肯定就是数字1
+	2.推导根据 水平和垂直的宫，去推导数据，比如上三宫的两宫的一二行都有数字 1，第三行只有一个空位，那肯定也是数字1
+	3.反向推导 （正在开发中，需要假设位，目前正在考虑比较高效的算法，挑战下自己）比如一个空位可能是 1或2，则假设为1或2 是否能使其它的行列宫不成立，如果假设的2不成立，则此号位就是 1
+	</pre>
+  <p>目前只实现了阶段一，和阶段二的小部分，阶段三之前想过一种算法，复杂度过高暂没加进去，后续有空时再研究。</p>
+  <p></p>
+
+  <div>
+        <table contenteditable="true" cellpadding="1" cellspacing="1">
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+        <button onclick="reckon()">计算结果在Console</button>
+  </div>
+</div>
+<script type="text/javascript">
+var Sudoku = function(coords){
+	this.init(coords);
+}
+Sudoku.prototype = {
+	_H:0,_V:1,_T:2,HEIGHT:9,
+	maxCount:10,completeCount:0,mCount:0,
+	cols:[],maybe:[],_defaultcols:[],
+	//开始运算,
+	//再说一下，此程序很难理解，因为用了一些JavaScript的默认转换的特性，所以里面有很多字符串与数字相加，比较的计算，在其它语言里面是不允许的，在JavaScript用太多也不好，大家不要学我，看的时候略过这些不规范。
+	reckon:function(){
+		console.time('Time for all count');
+		//整理数据,可计算出一眼就能看出的数据
+		this.clearData();
+		//开始计算
+		this.count();
+		console.timeEnd('Time for all count');
+	},
+	/**
+	*递归算法，由于第二次的开始运算的数据基于第一次运算的结果，直到全部运算完成或超过预置的最大运算次数
+	*	运算包括三个阶段，运行完后整理数据，如果尚未计算完，则以此次的结果再重新计算一次
+	*	1.计算行、列、宫内，可以完全确定的数字。比如 40 62 13 26 都为数字 1 则可以确定 01 位肯定就是数字1
+	*	2.推导根据 水平和垂直的宫，去推导数据，比如上三宫的两宫的一二行都有数字 1，第三行只有一个空位，那肯定也是数字1
+	*	3.反向推导 （正在开发中，需要假设位，目前正在考虑比较高效的算法，挑战下自己）比如一个空位可能是 1或2，则假设为1或2 是否能使其它的行列宫不成立，如果假设的2不成立，则此号位就是 1	
+		目前 发现3不用，也可以算出结果，
+	*
+	*/
+	count:function(){
+		if(this.mCount>=80||this.completeCount>=this.maxCount){
+			if(this.mCount<80){
+				console.info('没有计算完成：计算次数：'+this.completeCount);
+			}else{
+				console.info('计算完成：计算次数：'+this.completeCount);
+			}
+			this.showResult();
+			return;
+		}
+		console.time('Count'+this.completeCount+' for reckon');
+		this.setSingleData();
+		console.timeEnd('Count'+this.completeCount+' for reckon');
+		this.completeCount++;
+		this.count();
+	},
+	//根据目前已知的数据初步进行整理，将可能的数据理顺
+	/**
+	*	思路：如果位置上已经有数字了，则跳过，如果没有数字（初始为0），则计算此位置的横排，竖排，和所处宫位的数据，计算出可能在此位置上的数据
+	*	
+	*	算法：对一个坐标，取其横向，纵向，宫内分别可能的Maybe,再计算交集则则可算出该位上的取值区间
+	*/
+	clearData:function(){
+		for(var x = 0; x < 9; x++){
+			var row = this.getArr(x, this._H);
+			for(var y = 0; y < 9; y++){
+				var col = this.getArr(y,this._V);
+				var z =Math.floor(x/3)*3 + Math.floor(y/3);
+				var tm = this.getArr(z,this._T);
+				var value = this.cols[x][y];
+				if(value>10||value==0){
+					this.cols[x][y] = this.getMaybe(row, col, tm);
+				}
+			}
+		}
+	},
+	//简单的单排/列/单宫排除 (算法，打出一排/列/宫所有大于10的数，并相加（字符串形式），如果一个数字只出现了一次，则可确定公位置，如（ 149  134  7  468  1489  5  14  348  2）相加 得149134468148914348，6只出现了一次，则可以确认有6的位置肯定是6)
+	//，如果已经排除出一个，则再重算，得得149134148914348，6只出现了一次，则可以确认有6的位置肯定是6，没有独立的数字并与之前的结果一致后，搁置
+	//说明 ：不知道怎么办，一共要执行9*3=27次，执行顺充序的先后也会影响最终结果给出来的计算次数，目前不知道怎么做到减少这些次数，暂且为每次编译一横一竖一宫吧。（这样代码会少一点，性能不见得好，个人觉得从中间到两边顺序的排除可能会更给力点，不曾证实）
+	setSingleData:function(){
+		for(var i=0;i<9;i++){
+			this.setSingleX(i);
+			this.setSingleY(i);
+			this.setSingleZ(i);
+		}
+	},
+	setSingleX:function(pos){
+		var arr = this.getArr(pos,this._H);
+		var oldstr= arr.join('');
+		if(oldstr.length==9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10){
+						this.cols[pos][i]=this.cols[pos][i].replace(mustValue[j],'');
+						if(this.cols[pos][i]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');;
+		var sureSize = sureValue.length;
+		if(sureSize>0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<sureSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
+						var x = pos;
+						var y =i;
+						this.setSingleValue(x,y,sureValue[j]);
+					}
+				}
+			}
+		}
+	},
+	setSingleY:function(pos){
+		var arr = this.getArr(pos,this._V);
+		var oldstr= arr.join('');
+		if(oldstr.length<=9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');;
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(mustValue[j])>-1){
+						this.cols[i][pos] = this.cols[i][pos].replace(mustValue[j],'');
+						if(this.cols[i][pos]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');;
+		var sureSize = sureValue.length;
+		if(sureSize>0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<sureSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
+						var x = i;
+						var y =pos;
+						this.setSingleValue(x,y,sureValue[j]);
+					}
+				}
+			}
+		}
+	},
+	setSingleZ:function(pos){
+		var arr = this.getArr(pos,this._T);
+		var oldstr= arr.join('');
+		if(oldstr.length==9)return;
+		var values = this.getSureValue(arr);
+		var mustValue = values[0].split('');;
+		var mustSize = mustValue.length;
+		if(mustSize > 0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<mustSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(mustValue[j])>-1){
+						var h=Math.floor(pos/3);
+						var v=pos%3;
+						var starth=h*3;
+						var startv=v*3;
+						var x=starth+Math.floor(i/3);
+						var y=startv+i%3;
+						this.cols[x][y] = this.cols[x][y].replace(mustValue[j],'');
+						if(this.cols[x][y]<10)this.mCount++;
+					}
+				}
+			}			
+		}
+		var sureValue = values[1].split('');
+		var sureSize = sureValue.length;
+		if(sureSize>0){
+			for(var i=0;i<9;i++){
+				for(var j=0;j<sureSize;j++){
+					if(arr[i]>10&&arr[i].indexOf(sureValue[j])>=0){
+						var h=Math.floor(pos/3);
+						var v=pos%3;
+						var starth=h*3;
+						var startv=v*3;
+						var x=starth+Math.floor(i/3);
+						var y=startv+i%3;
+						this.setSingleValue(x,y,sureValue[j]);
+					}
+				}
+			}
+		}
+	},
+	setSingleValue:function(x,y,value){
+		this.cols[x][y] = value;
+		this.mCount++;
+		for(var i=0;i<9;i++){
+			if(this.cols[x][i]>10&&this.cols[x][i].indexOf(value)>-1&&i!=y){
+				this.cols[x][i] = this.cols[x][i].replace(value,'');
+				if(this.cols[x][i]<10)this.mCount++;
+			}
+		}
+		for(var i=0;i<9;i++){
+			if(this.cols[i][y]>10&&this.cols[i][y].indexOf(value)>-1&&i!=x){
+				this.cols[i][y] = this.cols[i][y].replace(value,'');
+				if(this.cols[i][y]<10)this.mCount++;
+			}
+		}
+		var pos = this.postion(x,y,this._T);
+		var arrT = this.getArr(pos[0],this._T);
+		for(var i=0;i<9;i++){
+			if(arrT[i]>10&&arrT[i].indexOf(value)>-1&&arrT[i]!=value){
+				var tmpos = this.postion(pos[0],i,this._T);
+				this.cols[tmpos[0]][tmpos[1]] = this.cols[tmpos[0]][tmpos[1]].replace(value,'');
+				if(this.cols[tmpos[0]][tmpos[1]]<10)this.mCount++;
+			}
+		}
+
+	},
+	offset:function(start,index,type){
+		switch(type){
+			case this._H:
+				return [start,index];
+			case this._V:
+				return [index,start];
+			case this._T:
+				var h = Math.floor(start / 3);
+				var v = start % 3;
+				var starth = h * 3 + Math.floor(index/3);
+				var startv = v * 3 + index%3;
+				return [starth, startv];
+		}
+
+	},
+	postion:function(x,y,type){
+		switch (type) {
+			case this._H:
+				return[x,y];
+			case this._V:
+				return[y,x];
+			case this._T:
+				var start = Math.floor(x/3) *3  + Math.floor(y/3);
+				var index = y%3 + (x%3)*3;
+				return [start,index];
+		}
+	},
+	getSureValue:function(arr){
+		var numberstr = '', must='', sure='';
+		for(var i=0,j=arr.length;i<j;i++){
+			if(arr[i]>10){
+				numberstr+=arr[i];
+			}else{
+				must+=arr[i];
+			}
+		}
+		for(var i=1;i<=9;i++){
+			var s=''+i;
+			var start = numberstr.indexOf(s);
+			if(start!=-1&&start==numberstr.lastIndexOf(s)&&must.indexOf(s)==-1){
+				sure+=s;
+			}
+		}
+		return [must,sure];
+	},
+	//此位置上可能的数据，将三围（横竖宫）上所有已经的数据T掉，及为可能数据
+	getMaybe:function(row,col,tm){
+		var exclude=[];maybe=[];
+		for(var i=0;i<9;i++){
+			if(row[i]<10&&row[i]>0) exclude.push(row[i]);
+			if(col[i]<10&&col[i]>0) exclude.push(col[i]);
+			if(tm[i]<10&&tm[i]>0) exclude.push(tm[i]);
+		}
+		for(var i=1;i<=9;i++){
+			if(exclude.indexOf(''+i)==-1){
+				maybe.push(i);
+			}
+		}
+		return maybe.join('');
+	},
+	init:function(coords){
+		// this.cols=coords;
+		for(var i=0;i<9;i++){
+			/**
+			* 多数组要循环SLICE，因为一个SLICE的数组只是指针，
+			*/
+			this._defaultcols.push(coords[i].slice(0));
+			var tran = [];
+			for(var j=0;j<9;j++){
+				if(coords[i][j])this.mCount++;
+				tran.push(''+coords[i][j]);
+			}
+			this.cols.push(tran);
+		}
+	},
+	getArr:function(index,type){
+		switch(type){
+			case this._H:
+				return this.cols[index];
+			case this._V:
+				var varr =[
+						this.cols[0][index],
+						this.cols[1][index],
+						this.cols[2][index],
+						this.cols[3][index],
+						this.cols[4][index],
+						this.cols[5][index],
+						this.cols[6][index],
+						this.cols[7][index],
+						this.cols[8][index]
+				];
+				return varr;
+			case this._T:
+				var h=Math.floor(index/3);
+				var v=Math.floor(index%3);
+				var starth=h*3;
+				var startv=v*3;
+				var tarr =[
+					this.cols[starth][startv],
+					this.cols[starth][startv+1],
+					this.cols[starth][startv+2],
+					this.cols[starth+1][startv],
+					this.cols[starth+1][startv+1],
+					this.cols[starth+1][startv+2],
+					this.cols[starth+2][startv],
+					this.cols[starth+2][startv+1],
+					this.cols[starth+2][startv+2]
+				];
+				return tarr;
+		}
+	},
+	showResult:function(){
+		var msg = '';
+		var style =[];
+		for(var x=0;x<9;x++){
+			for(var y=0;y<9;y++){
+				msg+='  %c'+this.cols[x][y];
+				style.push(this._defaultcols[x][y]?'"color:black;"':'"color:green;"');
+			}
+			msg+='\\n';
+		}
+		// console.log(msg);
+		// console.log(style.join(','));
+		window.eval('console.warn("' + msg + '",' +style.join(',')+ ');');
+	}
+}
+
+var arr1=[
+	[0,0,8,3,0,9,1,0,0],
+	[9,0,0,0,6,0,0,0,4],
+	[0,0,7,5,0,4,8,0,0],
+	[0,3,6,0,0,0,5,4,0],
+	[0,0,1,0,0,0,6,0,0],
+	[0,4,2,0,0,0,9,7,0],
+	[0,0,5,9,0,7,3,0,0],
+	[6,0,0,0,1,0,0,0,8],
+	[0,0,4,6,0,8,2,0,0]
+];
+var arr2 = [
+	['','','7','','','5','','','2'],
+	['','8','6','','3','','9','',''],
+	['','5','','','7','','','',''],
+	['','','4','','','8','','',''],
+	['8','9','','','','','','7','5'],
+	['','','','1','','','3','',''],
+	['','','','','2','','','6',''],
+	['','','8','','6','','7','1',''],
+	['3','','','9','','','8','','']
+];
+$('table tr').each(function(x,node){
+	$(node).children().each(function(y,el){
+		$(el).text(arr2[x][y]);
+	});
+});
+//var sudoku = new Sudoku(arr1);
+//sudoku.reckon();
+function reckon(){
+	var arr = [];
+	$('table tr').each(function(x,node){
+		var row = [];
+		$(node).children().each(function(y,el){
+			row.push($(el).text());
+		});
+		arr.push(row);
+	});
+	var sudoku = new Sudoku(arr);
+	sudoku.reckon();
+}
+</script>
+</body>
+<!--
+	做出来了之后回忆一下过程与主要难点
+	1.理清思路。先按自己的笨方法写出来在说，写的过程中可能会来灵感，更好的算法会出来（特别是数学题，总有一定规律你是先前没考虑到的，你要是不做也永远不会想到）
+	2.做的过程中需要两个Util方法(offset/postion)，坐标与位置互相计算的方法，非常关键，除了要自己写单元测试外，最好直接在草稿纸上画草图自行找规则先，比只敲键盘不动笔能节约不少时间
+	3.由于是递归算法，算错时比较难调试，则可输出相关的环境信息，（本程序调试时选用排除法，即分别横竖宫算法进行排除分析，缩小范围后再输出调试信息）
+	4.不懂时要动脑，因为遇到实际问题时，百度不一定能回答的了你。开发中复制数组时有点问题，用了since与concat都无法复制，百度上就没说对于二维数据应该如何复制，知道了原因就很好解决，数据里面的数组应该逐一复制才能复制一个二维数组
+	5.利用语言特性（JavaScript）虽可以简化代码，但不推荐，我虽然用了，但开发时有几次都是因为这些而出错。
+	6.找准有性能问题的代码，后续调试并优化
+-->
+</html>

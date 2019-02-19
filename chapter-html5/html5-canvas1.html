@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>CANVAS给网页添加万花筒特效</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-CANVAS给网页添加万花筒特效">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body class="wrapper markdown-body">
+  <h1>使用CANVAS给网页添加万花筒特效</h1>
+  <p>
+    经常看见很多网站上做很多很酷的东西，除了CSS3外，使用画布也是一个不错的选择，相对于CSS3的动画，画布更为灵活强大，有强大的API与支持库，也就是因为如此，很多朋友说画布只适合于高端用户，专业开发游戏什么的，不适合一般网站。</p>
+  <p>
+    小小研究后，发现画布没有想象中的复杂，不考虑开发高级功能如游戏什么的话，也是比较适合给页面加特效的，本页简单做了一个万花筒的效果，只需要短短70行代码就可以搞定。也只用了几个简单的API。
+  </p>
+<pre>
+<code>var pageEffect = (function(document,window,undefined){
+  'use strict';
+  var draw = null,              //canvas 2d 对象
+    width = document.body.offsetWidth,    //屏幕宽度  
+    height = document.body.offsetHeight,  //屏幕高度
+    stopevent = null;              //动画事件（停止）
+  var the1data=[                //特效需要的数据
+      {rgb : '0,0,128,' , offset : [ 0.5*width, 150, 30, 40], start:0.2, stop:0.5, step:0.01},
+      {rgb : '0,128,128,' , offset : [ 0.3*width, 200, 50, 50], start:0.1, stop:0.4, step:0.008},
+      {rgb : '128,0,128,' , offset : [ 0.4*width, 50, 40, 60], start:0.3, stop:0.8, step:0.007},
+      {rgb : '0,0,255,' , offset : [ 0.6*width, 85, 80, 50], start:0.4, stop:0.6, step:0.006},
+      {rgb : '0,255,128,' , offset : [ 0.7*width, 300, 60, 40], start:0.1, stop:0.8, step:0.005},
+      {rgb : '0,0,128,' , offset : [ 0.2*width, 250, 50, 30], start:0.2, stop:0.6, step:0.009},
+      {rgb : '255,0,128,' , offset : [ 0.24*width, 120, 60, 60], start:0.3, stop:0.4, step:0.008},
+      {rgb : '128,0,0,' , offset : [ 0.35*width, 180, 30, 30], start:0.2, stop:0.3, step:0.007},
+      {rgb : '0,128,0,' , offset : [ 0.45*width, 230, 40, 40], start:0.1, stop:0.1, step:0.006},
+      {rgb : '128,128,0,' , offset : [ 0.55*width, 400, 50, 50], start:0.4, stop:0.9, step:0.004},
+      {rgb : '255,128,0,' , offset : [ 0.65*width, 330, 60, 60], start:0.3, stop:0.8, step:0.001},
+      {rgb : '128,0,255,' , offset : [ 0.75*width, 380, 70, 50], start:0.2, stop:0.7, step:0.005},
+      {rgb : '125,128,255,' , offset : [ 0.62*width, 94, 50, 70], start:0.1, stop:0.6, step:0.002},
+      {rgb : '128,0,128,' , offset : [ 0.48*width, 324, 60, 60], start:0.2, stop:0.5, step:0.001}
+    ];
+
+  /**
+  * 初始化页面，将canva插入BODY
+  */
+  function init(){
+    var css = 'position:absolute;left:0;top:0;z-index:9999;pointer-events:none;'
+    var canva = document.createElement("canvas");
+    canva.width = width;  
+    canva.height = height;  
+    canva.style.cssText = css;
+    document.body.appendChild(canva),
+    draw = canva.getContext("2d");
+    drawCanvas();
+    animation(Date.now());
+  }
+  /**
+  * 绘制页面
+  */
+  function drawCanvas(){
+    draw.clearRect(0,0,width,height);
+    for(var i = 0, j = the1data.length; i &lt; j; i++){
+      var data = the1data[i];
+      if((typeof data.current) == 'undefined'){
+        data.current = data.start;
+      }
+      data.current += data.step;
+      if(data.current &gt; data.stop ){
+        data.step = data.step &gt; 0 ? (0-data.step): data.step;
+      }else if(data.current &lt; data.start){
+        data.step = data.step &lt; 0 ? (0-data.step): data.step;
+      }
+      draw.beginPath();
+      draw.fillStyle = 'rgba(' + data.rgb + data.current+')';
+      draw.fillRect(data.offset[0],data.offset[1],data.offset[2],data.offset[3]);
+      draw.stroke();
+    }
+    draw.closePath();
+        draw.fill(); 
+  }
+  /**
+  * 动画特效
+  */
+  function animation(){
+    drawCanvas();
+    stopevent=window.requestAnimationFrame(animation);
+  }
+  function stopanimation(){
+    window.cancelAnimationFrame(stopevent);
+  }
+  init();
+  return {stop:stopanimation};
+})(document,window);</code></pre>
+<p>这70行代码不仅完成了特效，还有个stop方法，这里就不多说了，可以自行通过控制台pageEffect.stop()看看效果。另外，本特效也可适用于其它网页，<a title="pageEffect" href="javascript: void((function() {if(typeof pageEffect!='undefined'){pageEffect.stop();return};var element = document.createElement('script');element.charset = 'utf-8';element.setAttribute('src', 'http://test.xdnote.com/javascripts/page-effect.js');document.body.appendChild(element);})())">把我拉到书签，在其它页面上点我，点一次出效果，再点一次停止动画</a></p>
+<div>
+</div>
+<script type="text/javascript" src="../javascripts/page-effect.js"></script>
+</body>
+</html>

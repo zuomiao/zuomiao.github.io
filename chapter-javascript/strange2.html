@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>奇怪的javaScript 二：括号语法</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-奇怪的javaScript：括号语法">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+<div class="wrapper markdown-body">
+	<h2>第一段：以下这段代码是很常见的，注释一下不多解释</h2>
+	<pre><code>
+	(function(x){console.log(x);}(1));
+	/**
+	 * (function(x){console.log(x);}(1));
+	 *	1.设无名变量abc = function(x){console.log(x);} 
+	 *	2.则代码段可以表示为 (abc(1));
+	 *	3.如果不要括号则为abc(1),看上去应该可以省略括号的，但实际上省略了就不会执行了
+	 *	4.原因主要是因为无名变量abc目前还不是实体，肯定是无法执行的
+	 *	5.如何形成实体呢，应该这样 new abc(1); 即“new function(x){console.log(x);}(1);”
+	 *	6.看样子，括号代替了new 的功能，实际上并不是这样（可以从第二段代码中找点思路，不多说）
+	 *	7.括号催动的，是一个运算，而new操作，催动了一个实体构造
+	 *	8.即然是运算，那么以上代码还可以写为以下几种
+	 */
+	!function(x){console.log(x);}(1);
+	/**
+	 *	9.一个!就可以运行了，括号都可以省掉了，当然还可以返回结果 ：如下
+	 */
+	var rst = !function(x){console.log(x);return x>0;}(1);
+	/**
+	 *	10.执行后，rst即为程序的返回值，其实等号也是运算符，这种情况下，如无需要 ! 也可以省略了 
+	 *	11.于是有了以下代码，都有直接运行的效果
+	 */
+	+function(x){console.log(x);}(1);
+	-function(x){console.log(x);}(1);
+	!function(x){console.log(x);}(1);
+	/**
+	 *	12.再看这样一段代码 
+	 */
+	(function(x){console.log(x);})(1);
+	/**
+	 *	13.运行结果和第一段一样，没什么好说的
+	 *	14.再从第一步看起，设无名变量 abc =  function(x){console.log(x);}
+	 *	15.这段代码可以表示为 (abc)(1)
+	 *	16.根据上面的分析，括号有运算了功能，但没有实例化的功能，这段代码理论上是不能成立的
+	 *	17.但实际上，abc并没有并实例化，括号内还是计算，只不过计算的结果就返回了这样一个函数
+	 *	18.如果按顺序，则相当于 var abc=function(x){console.log(x);} abc(1);
+	 *	19.虽然结果一样，但过程上来看，先一段代码计算的是 abc(1)，再返回结果, 这一段代码计算的是 abc，再返回abc(1)
+	 *	20.没有算过效率 不过理论上来说，第一种可能会快点，毕竟粗暴一些。其实也不必太在意这些小细节的性能，理解原理是主要
+	 */
+	</code></pre>
+<p>
+	
+</p>
+
+	<h2>第二段：讨论下new操作，照样只写注释</h2>
+	<pre><code>
+	function A(){
+		this.init(arguments);
+		return 0;
+	}
+	A.prototype={
+		init:function(args){
+			console.log(args);
+		}
+	}
+	//	1.这里面会报一个语法错误，主要是因为它没有实例化
+	//	2.更加直白的说下：像这种写法 return 没有任何作用，因为构造器中有this指针就说明，只有new操作才能，而new操作总是返回的对象本身，而不是构造器中return的值
+	A();
+
+	//	2.没有参数时，括号都可以不写,效果与写了是一样的，当然个人建议任何时候都写括号
+	new A;
+	new A();
+	
+	//	3.带参数时，就必须写括号了
+	new A(1);
+	new A(1,'2');
+	
+	//	4.仿造一下，由于 函数已经定义了，所以不太好证明第一段代码的想法
+	//	(A);
+	//	!A;
+	//	var dd = new A('dd');
+	//	dd.init(1,'2');
+	//	dd();	//error
+	//	dd;
+	//	A=!A;
+	//	console.log(A);
+	//	console.log(new A('DFA'));
+	//	A();
+	//	A++;
+	//	console.log(A);
+	//	console.log(new A('DFA'));
+	//	(A);
+	
+	//	5.再来一无段
+	function B(){
+		console.log(arguments);
+		return 1;
+	}
+	B();
+	new B;
+	new B(1);
+	new B(1,'2');
+	B;
+	
+	//	6.结论：无参可省略括号，但此表达式只能构造一个对象，如果要操作还是加把括号加上
+	console.log(new Date);
+	console.log(new Date());
+	console.log((new Date).getTime());
+	console.log(new Date().getTime());
+	</code></pre>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>a</title>
+	</head>
+	<body>
+	</body>
+	<script>
+	
+	var XDE = {
+		ev1:function(){
+			try{
+				//HTMLEvents MouseEvents UIEvents
+//				var evt = document.createEvent('MutationEvents');
+//				evt.initEvent('DOMCharacterDataModified',false,false);
+				var el = document.getElementsByTagName('title')[0];
+				el.addEventListener('DOMCharacterDataModified',function(e){
+					console.log(e);
+					console.log('123');
+				});
+				console.log('xx');
+			}catch(e){
+				console.log(e);
+			}
+			
+		},
+		ev2:function(){
+			var evt = new MutationEvent();
+			var el = document.getElementsByTagName('title')[0]
+			el.addEventListener('DOMCharacterDataModified',function(e){
+				
+				console.log('123');
+			});
+//			console.log(el);
+//			el.dispatchEvent(evt);
+//			document
+		}
+	}
+	
+	XDE.ev1();
+//	XDE.ev2();
+	
+	</script>
+</html>

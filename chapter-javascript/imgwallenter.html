@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>移动设备上的图片墙</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-移动设备上的图片墙">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+  	html,body{
+  		height: 100%;
+  		margin: 0;
+  		min-height: 536px;
+  		overflow: hidden;
+  	}
+  	.container{
+  		height: 100%;
+  	}
+  	.container .introduce{
+  		height: 100%;
+  		width: auto;
+  		min-width: 700px;
+  		float: left;
+  		padding: 15px;
+  		background-color: #D6D6D6;
+  		overflow-y:auto;
+  		overflow-x: hidden;
+  	}
+  	.container .exp{
+  		padding-right: 50px;
+  		padding-top: 50px;
+  		width: 366px;
+  		height: 100%;
+  		display: block;
+  		position: absolute;
+  		right: 0;
+  	}
+  </style>
+</head>
+<body>
+	<div class="container markdown-body ">
+		<div class="introduce">
+			<h1>一个简单的图片墙，可用于手机浏览器</h1>
+			<h2>功能介绍</h2>
+			<p>1.基于hammer做的一个防图库的图片浏览器。可以实现放大缩小、拖拽、手势切换等功能。</p>
+			<p>2.不到300行的简单粗暴的代码很容易理解，不满足于效果可以自己修改。</p>
+			<p>3.支持requireJS,可以模块化引入。</p>
+			<p>4.请使用手机浏览器体验效果，这里提供一个二维码：</p>
+			<img src="../images/imgwallqrcode.png">
+			
+			<h2>恶心说明</h2>
+			<p>1.实测各种千元以内的手机上都不怎么流畅，2000+的机还可以</p>
+			<p>2.实测有些手机浏览器有BUG</p>
+			<p>3.需要在你的样式里面加一些样式</p>
+			<p>4.实现的效果可能与你的想象的有些出入，如果不符，可能需要你自己修改下代码</p>
+			<h2>开始使用</h2>
+			<p>在合适的地方加入如下CSS样式，不满意就自行修改下：
+				<pre><code>.iw_container{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	font-size: 1.8em;
+	display: none;
+}
+.iw_container .iw_header,
+.iw_container .iw_footer{
+	position: absolute;
+	display: block;
+	background-color: #4b4b4b;
+	color: #fff;
+	padding: 0;
+	margin: 0;
+	opacity: 0.5;
+	height: 2em;
+	line-height: 2em;
+	width: 100%;
+	z-index:999;
+	text-align: center;
+	overflow: hidden;
+}
+.iw_container .iw_header .iw_close{
+	padding-left: 0.5em;
+	float: left;
+}
+.iw_container .iw_header .iw_title{
+    display: block;
+    height: 100%;
+    margin-left: 20%;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    width: 60%;
+}
+.iw_container .iw_footer{
+	bottom: 0;
+	text-align:center;
+}
+.iw_container .iw_footer div{
+	height: 100%;
+	width: 49%;
+	text-align:center;
+	color: #ffffff;
+	display: inline-block;
+	border-left: 1px solid #D1D1D1;
+}
+.iw_container .iw_footer div.iw_frist{
+	border-left: none;
+}
+.iw_container .iw_wall{
+	background-color: #666666;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+.iw_container .iw_wall .iw_wall_ct{
+	height: 100%;
+	display: block;
+}
+.iw_container .iw_wall .iw_wall_ct .iw_img{
+    float: left;
+    height: 100%;
+    overflow: hidden;
+}
+.iw_container .iw_wall .iw_wall_ct .iw_img div{
+    background-size:contain;
+	background-position: center center ;
+	background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}</code></pre>
+			</p>
+			<p>在合适的地方引入脚本
+			<pre><code>&lt;script src="hammer.min.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="ImgWall.js" type="text/javascript"&gt;&lt;/script&gt;</code></pre></p>
+			<p>
+				创建对象ok
+			<pre><code>var imgWall = new ImgWall(config);</code></pre>
+			</p>
+			<p>config以对象的方式导入</p>
+			<h2>API</h2>
+			<p>
+				Config配置：
+				<pre><code> * 		id			:		容器ID
+ * 		data			:		图片数据：必须传数组至少包括图片地址
+ * 		scale			:		是否可放大缩小，默认true
+ * 		rotate			:		是否可旋转,默认false,只有开启scale的情况下才能开启rotate
+ * 		evt_Open		:		打开时的方法,也可以通过onOpen(fn)设置
+ * 		evt_Close		:		关闭时的方法，也可以通过onBack(fn)设置
+ * 		evt_Switch		:		切换时的方法，也可以通过onSwitch(fn)设置
+ * 		auto_open		:		是否自动打开，默认为true
+				
+比如最简单的，只传一张图片： var imgWall = new ImgWall({data:[{imgUrl:'xxx.jpg'}]});</code></pre>
+			<br>不入流的代码API就不写了，有兴趣自己看源码吧<br>
+			</p>
+		<br>
+		<h2>下载</h2>
+		<p>
+		<a href="http://test.xdnote.com/javascripts/hammer.min.js">http://test.xdnote.com/javascripts/hammer.min.js</a>
+		<br>
+		<a href="http://test.xdnote.com/javascripts/ImgWall.js">http://test.xdnote.com/javascripts/ImgWall.js</a>
+		<br>
+		<a href="http://test.xdnote.com/javascripts/ImgWall.min.js">http://test.xdnote.com/javascripts/ImgWall.min.js</a>
+		<br>
+		</p>
+		<br>
+		<br>
+		<br>
+		</div>
+		<div class="exp"><iframe src="imgwall.html" width="365" height="536"></iframe></div>
+	</div>
+	
+</body>
+</html>

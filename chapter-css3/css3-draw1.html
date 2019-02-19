@@ -1,0 +1,437 @@
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>CSS3 - draw1</title>
+		<meta name="author" content="http://www.xdnote.com/" />
+		<style>
+			/**
+			* 先说明一下，本人是在IE上调试，因为更符合CSS3的风格，不用加什么前缀，也懒得多写重复的东西，也好看点。
+			* 如果在FireFox,Chrome,Opea等浏览器上使用，自行在CSS3的样式名前面加上-webkit-,-moz-,-o-等。
+			*/
+			.container{
+				width: 800px;
+				height: 200px;
+				border: 1px solid #000;
+				margin: 0 auto;
+
+				border-radius: 20px;
+				column-count:4;
+				column-gap:0px;
+				column-rule:1px outset #000000;
+			}
+			.container1{
+				margin-top: 20px;
+				border-bottom-left-radius: 0 0;
+				border-bottom-right-radius: 0 0;
+			}
+			.container2{
+				margin: 0px auto;
+				border-top: none;
+
+				border-top-left-radius: 0 0;
+				border-top-right-radius: 0 0;
+			}
+			.container .show{
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+
+				border-radius: 20px;
+			}
+			.container .show .draw{
+				width: 200px;
+				height: 170px;
+				display: inline-block;
+				transition:all 2s;
+			}
+			.container .show .text{
+				width: 200px;
+				height: 30px;
+				line-height: 28px;
+				text-align: center;
+			}
+			.draw:hover{
+				transform: rotate(360deg);
+			}
+			/**
+			*椭圆形状，或圆形状，主要使用border的圆角效果实现
+			*/
+			.tuoyuan{
+				/**
+				*1.想象椭圆的扁度，比如我想画个橄榄球那样程度的椭圆，先算算，宽度为100，高度60左右
+				*/
+				width: 100px;
+				height: 60px;
+				margin-top: 50px;
+				margin-left: 50px;
+				background-color: #B10326;
+				/**
+				*2.可以使用border-top-left-radius定义一边的形状
+				第一个值是水平半径，第二个值是垂直半径。如果省略第二个值，则复制第一个值。在这里水平半径为宽度一半 ，垂直半径为高度一半即 50 X 30；
+				*/
+				border-top-left-radius: 50px 30px;
+				/**
+				*3.复制到另外三边，椭圆即成，思路就是这样，如果想椭圆更椭，则加大宽高比即可
+				*/
+				border-bottom-left-radius: 50px 30px;
+				border-top-right-radius: 50px 30px;
+				border-bottom-right-radius: 50px 30px;
+				/**
+				*规律找出来后发现一个更简单的方法
+				*只要一行就搞定了 border-radius:50% 50%;上面的都可以干了。这种写法更灵活
+				*/
+			}
+
+			/**
+			*三角形不是什么新的特性，CSS3没出之前就有了，使用边框颜色与宽度实现，只不过没有CSS3这样的功能有点鸡肋
+			*/
+			.shanjiaoxin{
+				/**
+				*1.使用边框宽度颜色，颜色与背景重合的视觉欺骗做三角形。相邻两个边有长度就是直角，任意三个边有长度就可以根据相对的两边和是否大于独立的一边去算锐角还是钝角。
+				*/
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 80px 30px 0 70px;
+				margin-top: 50px;
+				margin-left: 30px;
+				/**
+				*2.这只的border-width需要自行去算，如果不是直角三角形，就有3个边不为0，这里有点小问题就是这个三角形不能旋转，也并不是完全不能旋转，只是旋转是需要重新计算宽度去实现，太麻烦，有CSS3就好了，一句话搞定。随心所欲。
+				*/
+				transform:rotate(60deg);
+				/**
+				*网上还有很多弄三角形的方法
+				*/
+			}
+
+			/**
+			*小时候学数学时算面积就把梯形拆开过，一个矩形+两个三解形。而且是两个直角三角形，直角三角形是很好算的。于是很简单就写出了以下代码,这里是第一次解决梯形的代码
+			*/
+			/**
+			.tixin{
+				margin-top: 40px;
+				margin-left: 40px;
+				display: inline-block;
+			}
+			.tixin div{
+				float: left;
+			}
+			.tixin .tleft{
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 80px 0 0 10px;
+			}
+			.tixin .tcenter{
+				width: 50px;
+				height: 80px;
+				background-color: #B10326;
+			}
+			.tixin .tright{
+				width: 0px;
+				height: 0px;
+				border-color: #B10326 #fff #fff #fff;
+				border-style: solid;
+				border-width: 80px 40px 0 0;
+			}
+			*/
+
+			/**
+			*忽然想起三角形的方案，几边可以重合的，如果自身有段宽度，就相当于把三角形的角给割了，三角形没了角，自然就成了梯形。比起上一种路又强大了不少。
+			*/
+			.tixin{
+				width: 60px;
+				height: 0px;
+				border-left:20px solid #ffffff;
+				border-right:40px solid #ffffff;
+				border-bottom: 50px solid #B10326;
+				margin-left: 30px;
+				margin-top: 50px;
+			}
+			/*
+			*这个梯形的成功可以想到，一个DIV就能搞定的还有很多简单图形，比如碗形，漏斗什么的。看想象力，这里画个漏斗形状,写到这里，我忽然很想写个纯CSS的loading动画了。
+			*/
+			.loudou{
+				width: 20px;
+				height: 10px;
+				background-color: #B10326;
+				border-top: 50px solid #B10326;
+				border-bottom: 50px solid #B10326;
+				border-left: 30px solid #ffffff;
+				border-right: 30px solid #ffffff;
+				margin-left: 50px;
+				margin-top: 20px;
+			}
+
+
+			/**
+			*看了上面4个简单的例子，想说啥，正如道家说的，太极生两仪，生四象，生八卦，再生降龙十八掌，再生七十二绝技，再生无限。。。只要有了基本的图形，想用CSS3画什么都可以了
+			*但是，没有人会去这么做，理由不说也明白，性价比太低。但也可能有用到的时候，这里先画几个简单的小东西练练手，理理思路
+			*环圈,这个非常简单，就是两个圆套在一起，里面的圆的背景与页面背景色一样。直接拷贝上面椭圆的代码不解释
+			*/
+			.huanquan{
+				display: inline-block;
+				width: 100px;
+				height: 100px;
+				margin-top: 30px;
+				margin-left: 50px;
+				background-color: #B10326;
+				border-radius:50% 50%;
+
+			}
+			/**内环要根据环的宽度计算偏移量，准确定位为外环里面*/
+			.huanquan .huanquan-inner{
+				display: block;
+				width: 80px;
+				height: 80px;
+				margin-top: 10px;
+				margin-left: 10px;
+				background-color: #ffffff;
+				border-radius:50% 50%;
+			}
+
+
+			/**
+			*匕首 如图，先进行整体分解，左中右分为把手，柄，刃。手是一个半椭圆和一个矩形，柄是一矩形加两个三角形，刃是一个梯形
+			*先计算总体，由于我要画的只有200PX,保持一点点的美观还留点边距，就算40px/20px/100px吧,总宽度为160，总高度为50（柄20+15+15）其它20。
+			*/
+			.bishou{
+				margin-left: 20px;
+				margin-top: 70px;
+			}
+			.bishou div{
+				position: absolute;
+				background-color: #B10326;
+				margin-top: 0px;
+				margin-left: 0px;
+			}
+			.bishou .bishou-bashou{
+				background-color: #ffffff;
+				width: 40px;
+				height: 20px;
+			}
+			/**
+			*把手是一个椭圆和一
+			*/
+			.bishou .bishou-bashou .bishou-bashou-left{
+				width: 10px;
+				height: 20px;
+				border-top-left-radius: 20px;
+				border-bottom-left-radius: 20px;
+				
+			}
+			.bishou .bishou-bashou .bishou-bashou-right{
+				width: 30px;
+				height: 20px;
+				margin-left: 9px;
+			}
+			/**
+			*刀柄，是一个矩形+两个三角形，也可以是一个矩形去四个边，这里我用第一种方式去实现
+			*/
+			.bishou .bishou-bing{
+				margin-left: 39px;
+			}
+			.bishou .bishou-bing .bishou-bing-top{
+				margin-top: -15px;
+				width: 0px;
+				height: 0px;
+				border-bottom: 15px solid #B10326;
+				border-left: 10px solid #ffffff;
+				border-right: 10px solid #ffffff;
+			}
+			.bishou .bishou-bing .bishou-bing-center{
+				width: 20px;
+				height: 20px;
+			}
+			.bishou .bishou-bing .bishou-bing-bottom{
+				margin-top: 20px;
+				width: 0px;
+				height: 0px;
+				border-top: 15px solid #B10326;
+				border-left: 10px solid #ffffff;
+				border-right: 10px solid #ffffff;
+			}
+			/**
+			*刃，一个梯形搞定
+			*/
+			.bishou .bishou-ren{
+				margin-left: 59px;
+				width: 60px;
+				height: 0px;
+				border-bottom: 20px solid #B10326;
+				border-right: 40px solid #ffffff;
+			}
+
+
+
+			/**
+			* 画个温暖的爱心。还是先分析一下，爱心由两个小圆的半圆和两个大圆的切边组成，这里设置小圆直径为50，大圆直径为120，然后再用overflow:hidden;弄掉不想要的部分拼起来
+			*/
+			.love{
+				margin-left: 40px;
+				margin-top: 40px;
+
+			}
+			.love div{
+				position: absolute;
+			}
+			.love .love-top{
+				width: 90px;
+				height: 30px;
+				overflow: hidden;
+			}
+			.love .love-top-left,.love .love-top-right{
+				width: 50px;
+				height: 50px;
+				background-color: #B10326;
+				border-radius: 50% 50%;
+			}
+			.love .love-top-right{
+				margin-left: 40px;
+			}
+			.love .love-bottom{
+				margin-top: 30px;
+				width: 90px;
+				height: 60px;
+			}
+			.love .love-bottom-left,.love .love-bottom-right{
+				width: 45px;
+				height: 60px;
+				overflow: hidden;
+				margin-left: 1px;
+			}
+			.love .love-bottom-right{
+				margin-left: 45px;
+			}
+			.love .love-bottom-left span,.love .love-bottom-right span{
+				display: block;
+				width: 120px;
+				height: 120px;
+				margin-top:-60px;
+				background-color: #B10326;
+
+				border-radius: 50% 50%;
+			}
+			.love .love-bottom-right span{
+				margin-left: -75px;
+			}
+			/**
+			*不知道为什么，IE老是和我算的差一个像素？动画的时候会比较明显。写了这几个都感觉不怎么实用，还剩一个格子写个实用的饼图
+			* 分析：饼图就是一个大圆，然后从圆心一定角度的区域切一块，好像用圆加三角形就能实现,但是试了下，总是却点，实在不行，查了下，别人用饼图都是clip实现的，我太土了。
+			*/
+			.bingtu,.bingtu-cut{
+				position: absolute;
+				width: 120px;
+				height: 120px;
+				margin-top: 15px;
+				margin-left: 30px;
+				border-radius: 50%;
+				background-color: #B10326;
+			}
+			.bingtu-cut{
+				background-color: #000000;
+				transform: rotate(200deg);
+				clip:rect(60px, 60px, 120px, 0px);
+				/**
+				* clip参数说明一下，依次是 top,right,bottom,left，这个顺序十分不理解，可以先截图再填数。
+				* 召唤出截图工具后，你会先点一下，就是坐标(top,left)，再拉出一个矩形代表区域(right,bottom)，所以,top/left即代表参照坐标,right/bottom即代表拉的矩形选框的边长。
+				*/
+			}
+			/**其实做出来后发现使用clip的方式也并不太实用，可能我没找到好的算法吧。*/
+		</style>
+	</head>
+	<body>
+		<div class="container container1">
+			<div class="show">
+				<div class="draw">
+					<div class="tuoyuan"></div>
+				</div>
+				<div class="text">椭圆</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="shanjiaoxin"></div>
+				</div>
+				<div class="text">三角形</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="tixin"></div>
+				</div>
+				<div class="text">梯形</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="loudou"></div>
+				</div>
+				<div class="text">漏斗</div>
+			</div>
+
+		</div>
+
+		<div class="container container2">
+
+			<div class="show">
+				<div class="draw">
+					<div class="huanquan">
+						<div class="huanquan-inner"></div>
+					</div>
+				</div>
+				<div class="text">环圈</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="bishou">
+						<div class="bishou-bashou">
+							<div class="bishou-bashou-left"></div>
+							<div class="bishou-bashou-right"></div>
+						</div>
+						<div class="bishou-bing">
+							<div class="bishou-bing-top"></div>
+							<div class="bishou-bing-center"></div>
+							<div class="bishou-bing-bottom"></div>
+						</div>
+						<div class="bishou-ren">
+						</div>
+					</div>
+				</div>
+				<div class="text">匕首</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="love">
+						<div class="love-top">
+							<div class="love-top-left"></div>
+							<div class="love-top-right"></div>
+						</div>
+						<div class="love-bottom">
+							<div class="love-bottom-left"><span></span></div>
+							<div class="love-bottom-right"><span></span></div>
+						</div>
+					</div>
+				</div>
+				<div class="text">爱心</div>
+			</div>
+
+			<div class="show">
+				<div class="draw">
+					<div class="bingtu"></div>  
+					<div class="bingtu-cut"></div>
+				</div>
+				<!--
+					对此研究的太浅，听说是个实用的功能，但看网上的好多3D效果，其实多个几倍或数十倍的工作也应该能搞出来个危在伪立体感的饼图，这里还是只搞一个平面图形了。
+				-->
+				<div class="text">饼图</div>
+			</div>
+
+		</div>
+	</body>
+</html>

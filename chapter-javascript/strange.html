@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>奇怪的javaScript 一：括号语法</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-奇怪的javaScript">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+ <p>也许是太无聊了今天看到别人用javaScript的[]和一些符号弄了个程序，完全看不懂，小研究一下，废话不说，先看代码，前面是javaScript语句，后面是结果</p>
+<pre>
+<code>&gt;true                   // true     boolean
+&gt;+true                  // 1        number
+&gt;[]+true                // "true"   string
+&gt;[]                     //  []      object
+&gt;+[]                    //  0       number
+&gt;[+[]]                  //  [0]     object
+&gt;[[]]                   //  [Array[0]]  object
+&gt;[[]][+[]]              //  []      object
+&gt;[[]][0]                //  []      object
+&gt;[[]][+[]] == [[]][0]   //  false
+&gt;[[]][+[]] == []        //  false
+&gt;[[]][0] == []          //  false
+&gt;[] == []               //  false
+&gt;++[]                   //  Error
+&gt;++[[]][+[]]            //  1       number
+&gt;++[[]][+[]]+[+[]]      //  "10"    string
+&gt;++[[]][+[]]+[+[]]      //  1       number
+&gt;!+[]+!+[]              //  2       number
+&gt;+!+[]+(+!+[])          //  2       number
+&gt;[][+[]]                //  Error
+&gt;[][[]]                 //  undefined   undefined
+&gt;[][[]]+[]              //  "undefined" string</code>
+</pre>
+<p>个人水平不足，只当是JS特性，可能这是JavaScript编译器的处理结果，因为它们语法上来说是没错的，所以可以编译，但很明显可以看出,"[]"是一个object，被"+"会变成string,被"!"后会变成boolean,而boolean被+后变成number!,而可以转化为number的string与number相加会变成string，相减会变成number!</p>
+<p>虽然很无聊，也不完全没有实用性，唯一能想到的实用就是装B，写的代码让别人完全看不懂。比如我就装B一下：打开你的开发人员工具Console面板，输入代码 <span style="color:red">(![]+[])[+!+[]]+([][[]]+[])[!+[]+!+[]]+(![]+[])[+!+[]]+((+!+[]+[+[]])-(!+[]+!+[]))+(!+[]+!+[]+!+[]+!+[]+!+[]+!+[]+!+[])</span> 执行的结果是我的帐号"ada87"，也可以用<span style="color:red">(![]+[])[+!+[]]+([][[]]+[])[!+[]+!+[]]+(![]+[])[+!+[]]+(!+[]+!+[]+!+[]+!+[]+!+[]+!+[]+!+[]+!+[])+(!+[]+!+[]+!+[]+!+[]+!+[]+!+[]+!+[])</span>，还可以有多种方法，结果是一样的，当然你不一定能学我，目前好像只能打出这几个字母a d e f i l n r s t u 与数字的组合，具体原因可以自己去想。</p>
+</div>
+</html>

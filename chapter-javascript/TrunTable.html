@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>逆转Table</title>
+    <style type="text/css">
+        body{
+         background-color: #ffffff;
+        }
+        table{
+            background-color: #fafafa;
+            max-width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+                border: 1px solid #666666;
+                font-size:12px;
+        }
+        table tr th,table tr td{
+                border: 1px solid #666666;
+                padding:2px;
+        }
+        button{
+                position: absolute;
+                top:200px;
+                left:200px;
+        }
+    </style>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-逆转Table">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+    <p></p>
+    <p>有时候习惯于用Table展示数据，每个tr就是一条数据，但维度不同，有时想使用第一列做为横向维度，要是用服务端代码就比较麻烦了，可以还是一条一条的生成，生成完后在客户端逆转Table.</p>
+    <table id="turnTable">
+            <tr><th>用户类型</th><th>特权A</th><th>特权B</th><th>特权C</th></tr>
+            <tr><td>非法用户</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>普通用户</td><td>10</td><td>9</td><td>1</td></tr>
+            <tr><td>VIP1</td><td>20</td><td>9</td><td>2</td></tr>
+            <tr><td>VIP2</td><td>30</td><td>9</td><td>3</td></tr>
+            <tr><td>VIP3</td><td>40</td><td>500</td><td>4</td></tr>
+            <tr><td>VIP4</td><td>50</td><td>500</td><td>5</td></tr>
+            <tr><td>VIP5</td><td>60</td><td>9999</td><td>6</td></tr>
+            <tr><td>VIP6</td><td>70</td><td>9999</td><td>7</td></tr>
+            <tr><td>VIP7</td><td>80</td><td>9999</td><td>8</td></tr>
+            <tr><td>VIP8</td><td>90</td><td>无限</td><td>9</td></tr>
+            <tr><td>VIP9</td><td>1000</td><td>无限</td><td>10</td></tr>
+        </table>
+        <button onclick="tb.turn()">逆转</button>
+
+  <pre><code>
+        var TurnTable = function(tableid) {
+            this.table = document.getElementById(tableid);
+        }
+        TurnTable.prototype = {
+            table:null,
+            tbody:null,
+            nbody:[],
+            turn:function(){
+                this.tbody = this.table.children[0];
+                this.nbody = [];
+                this.build();
+                this.flush();
+
+            },
+            build:function(){
+                var columnSize=this.tbody.children.length,indexRow=this.tbody.children[0];
+                var th = indexRow.children,rowSize=th.length;
+                    for(var y=0;y&lt;rowSize;y++){
+                    var row = document.createElement('TR');
+                    for(var x=0;x&lt;columnSize;x++){
+                        var td = document.createElement(y==0?'TH':'TD');
+                        td.innerHTML = this.tbody.children[x].children[y].innerHTML;
+                        row.appendChild(td);
+                    }
+                    this.nbody.push(row);
+                }
+
+            },
+            flush:function(){
+                this.table.removeChild(this.tbody);
+                this.tbody = document.createElement('TBODY');
+                for(var i=0,j=this.nbody.length;i&lt;j;i++){
+                    this.tbody.appendChild(this.nbody[i]);
+                }
+                this.table.appendChild(this.tbody);
+            }
+        }
+        var tb = new TurnTable('turnTable');
+        tb.turn();
+    </code></pre>
+
+<script type="text/javascript">
+        var TurnTable = function(tableid) {
+            this.table = document.getElementById(tableid);
+        }
+        TurnTable.prototype = {
+            table:null,
+            tbody:null,
+            nbody:[],
+
+            turn:function(){
+                this.tbody = this.table.children[0];
+                this.nbody = [];
+                this.build();
+                this.flush();
+
+            },
+            build:function(){
+                var columnSize=this.tbody.children.length,indexRow=this.tbody.children[0];
+                var th = indexRow.children,rowSize=th.length;
+                    for(var y=0;y<rowSize;y++){
+                    var row = document.createElement('TR');
+                    for(var x=0;x<columnSize;x++){
+                        var td = document.createElement(y==0?'TH':'TD');
+                        td.innerHTML = this.tbody.children[x].children[y].innerHTML;
+                        row.appendChild(td);
+                    }
+                    this.nbody.push(row);
+                }
+
+            },
+            flush:function(){
+                this.table.removeChild(this.tbody);
+                this.tbody = document.createElement('TBODY');
+                for(var i=0,j=this.nbody.length;i<j;i++){
+                    this.tbody.appendChild(this.nbody[i]);
+                }
+                this.table.appendChild(this.tbody);
+            }
+        }
+        var tb = new TurnTable('turnTable');
+</script>
+</div>
+</html>

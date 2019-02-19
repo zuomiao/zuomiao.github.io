@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>一个简单的位运算权限系统</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-一个简单的位运算权限系统">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<script>
+
+</script>
+<div class="wrapper markdown-body">
+  功能看代码不解释，原理也不多说，自己看书。代码很低端，主要是想到位运算对我们普通码农的运用场景只能搞搞权限什么的，就记录一下！<br><br>
+
+  虽然是JavaScript写的，但一般用于后端，用于服务端存数据的话，就只存一个数字就够了，计算也不用搞什么遍历，当然如果要存超过32个特权就自己再想办法吧。
+<pre>
+<code>
+//定义特权,只能是0-30的数字,每个特权定义不要重复
+var tq0 = 0;
+var tq1 = 1;
+var tq2 = 2;
+var tq3 = 3;
+var tq4 = 4;
+var tq5 = 5;
+var tq6 = 6;
+var tq7 = 7;
+
+
+//判断用户是否有特权
+function usrhastq(u,t){
+  return (u&amp;(1&lt;&lt;t))>0;
+}
+//创建一个不具任何权限的用户
+function buildUser(){
+  return 0;
+}
+//给用户添加权限
+function addTq(u,t){
+  if(usrhastq(u,t)){
+    console.log("用户已经具有此特权");
+    return u;
+  }
+  return u|(1&lt;&lt;t);
+}
+//删除用户的权限
+function removeTq(u,t){
+  if(!usrhastq(u,t)){
+    console.log("用户还不具有此特权");
+    return u;
+  }
+  return u&amp;(~(1&lt;&lt;t));
+}
+//显示用户具有的特权
+function display(u){
+  console.log("用户是否有特权零:" + usrhastq(u,tq0));
+  console.log("用户是否有特权一:" + usrhastq(u,tq1));
+  console.log("用户是否有特权二:" + usrhastq(u,tq2));
+  console.log("用户是否有特权三:" + usrhastq(u,tq3));
+  console.log("用户是否有特权四:" + usrhastq(u,tq4));
+  console.log("用户是否有特权五:" + usrhastq(u,tq5));
+  console.log("用户是否有特权六:" + usrhastq(u,tq6));
+  console.log("用户是否有特权七:" + usrhastq(u,tq7));
+}
+//demo
+var user = buildUser();
+console.log(user);
+user = addTq(user,tq3);
+console.log(user);
+user = addTq(user,tq6);
+console.log(user);
+user = addTq(user,tq3);
+console.log(user);
+user = removeTq(user,tq1);
+console.log(user);
+user = removeTq(user,tq3);
+console.log(user);
+display(user);
+</code>
+</pre>
+打开Console可以看到本代码运行的效果
+</div>
+<script type="text/javascript">
+      //定义特权,只能是0-30的数字,每个特权定义不要重复
+      var tq0 = 0;
+      var tq1 = 1;
+      var tq2 = 2;
+      var tq3 = 3;
+      var tq4 = 4;
+      var tq5 = 5;
+      var tq6 = 6;
+      var tq7 = 7;
+      
+      
+      //判断用户是否有特权
+      function usrhastq(u,t){
+        return (u&(1<<t))>0;
+      }
+      //创建一个不具任何权限的用户
+      function buildUser(){
+        return 0;
+      }
+      //给用户添加权限
+      function addTq(u,t){
+        if(usrhastq(u,t)){
+          console.log("用户已经具有此特权");
+          return u;
+        }
+        return u|(1<<t);
+      }
+      //删除用户的权限
+      function removeTq(u,t){
+        if(!usrhastq(u,t)){
+          console.log("用户还不具有此特权");
+          return u;
+        }
+        return u&(~(1<<t));
+      }
+      //显示用户具有的特权
+      function display(u){
+        console.log("用户是否有特权零:" + usrhastq(u,tq0));
+        console.log("用户是否有特权一:" + usrhastq(u,tq1));
+        console.log("用户是否有特权二:" + usrhastq(u,tq2));
+        console.log("用户是否有特权三:" + usrhastq(u,tq3));
+        console.log("用户是否有特权四:" + usrhastq(u,tq4));
+        console.log("用户是否有特权五:" + usrhastq(u,tq5));
+        console.log("用户是否有特权六:" + usrhastq(u,tq6));
+        console.log("用户是否有特权七:" + usrhastq(u,tq7));
+      }
+      //demo
+      var user = buildUser();
+      console.log(user);
+      user = addTq(user,tq3);
+      console.log(user);
+      user = addTq(user,tq6);
+      console.log(user);
+      user = addTq(user,tq3);
+      console.log(user);
+      user = removeTq(user,tq1);
+      console.log(user);
+      user = removeTq(user,tq3);
+      console.log(user);
+      display(user);
+</script>
+</html>

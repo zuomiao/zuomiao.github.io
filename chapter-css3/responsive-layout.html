@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>CSS3:测试响应式布局</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的实验室-CSS3:测试响应式布局">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+	<style type="text/css">
+		article{
+			font-family: 华文黑体,微软雅黑;
+		}
+		@media (max-width: 799px) {
+		  article {
+		    font-size: 24px;
+		  }
+		  article:before{
+		   	content:'你的宽度800不到:字体只能显示24PX：';
+		  }
+		}
+		@media (min-width: 800px) and (max-width: 980px) {
+		  article {
+		    font-size: 30px;
+		  }
+		  article:before{
+		   	content:'800-980宽度:字体只能显示30PX：';
+		  }
+		}
+		@media (min-width: 980px) {
+		  article {
+		    font-size: 36px;
+		  }
+		  article:before{
+		   	content:'980px宽度以上:字体只能显示36PX：';
+		  }
+		}
+
+		@media only screen and (max-device-width:480px){
+			article:after{
+		   		content:' 设备宽度480都不到哦';
+			}
+		}
+		@media only screen and (min-device-width:480px) and (max-device-width:800px){
+			article:after{
+		   		content:' 设备宽度有480-800';
+			}
+		}
+		@media only screen and (min-device-width:800px){
+			article:after{
+		   		content:' 设备宽度800+了';
+			}
+		}
+		@media only screen and (min-resolution: 300dpi),only screen and (-webkit-min-device-pixel-ratio: 1.5),only screen and (min--moz-device-pixel-ratio: 1.5){
+			article:after{
+		   		content:'300dpi，视网膜屏幕yeah，好屏幕!';
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper markdown-body">
+	<article>
+		这是一段文字，让IE678去死吧
+	</article>
+	<pre><code>article{
+	font-family: 华文黑体,微软雅黑;
+}
+@media (max-width: 799px) {
+  article {
+    font-size: 24px;
+  }
+  article:before{
+   	content:'你的宽度800不到:字体只能显示24PX：';
+  }
+}
+@media (min-width: 800px) and (max-width: 980px) {
+  article {
+    font-size: 30px;
+  }
+  article:before{
+   	content:'800-980宽度:字体只能显示30PX：';
+  }
+}
+@media (min-width: 980px) {
+  article {
+    font-size: 36px;
+  }
+  article:before{
+   	content:'980px宽度以上:字体只能显示36PX：';
+  }
+}
+
+@media only screen and (max-device-width:480px){
+	article:after{
+   		content:' 设备宽度480都不到哦';
+	}
+}
+@media only screen and (min-device-width:480px) and (max-device-width:800px){
+	article:after{
+   		content:' 设备宽度有480-800';
+	}
+}
+@media only screen and (min-device-width:800px){
+	article:after{
+   		content:' 设备宽度800+了';
+	}
+}
+@media only screen and (min-resolution: 300dpi),only screen and (-webkit-min-device-pixel-ratio: 1.5),only screen and (min--moz-device-pixel-ratio: 1.5){
+	article:after{
+   		content:'300dpi，视网膜屏幕yeah，好屏幕!';
+	}
+}
+	</code></pre>
+	</div>
+</body>
+</html>

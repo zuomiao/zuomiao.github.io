@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <script type="text/javascript" src="../javascripts/moderniz.js"></script>
+  <title>Moderniz框架简单使用</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-Moderniz框架简单使用">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body class="wrapper markdown-body">
+  <p style="margin-top:20px;">Modernizr是一个HTML5特性探测框架（官网http://modernizr.com/），测试当前打开页面的浏览器是否支持HTML5/CSS3的相关特性，下载地址是http://modernizr.com/download/。可以根据想测试的特性选择下载。下载完后在页面上加入代码 <span style="color:red;">&lt;script type="text/javascript" src="moderniz.js" /&gt;</span>即可完成安装。</p>
+  <p>
+    完成完装后，打开页面即会生成一个Modernizr对象，使用开发人员工具很容易就能看到对象的内容。测试代码如下：
+  </p>
+<pre>
+<code>function debug(obj,level){
+    var str='';
+    for(i in obj){
+      if(typeof(obj[i])=='object'){
+        space = level + 1;
+        str+=i;
+        str+='&lt;br /&gt;';
+        str+=debug(obj[i],space)
+      }else if(typeof(obj[i])!='function'){
+        for(var x=0;x&lt;level;x++){
+          str+='&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;';
+        }
+        str+=i;
+        str+=":";
+        str+=obj[i];
+        str+='&lt;br /&gt;';
+      }
+    }
+    return str;
+  }
+  document.getElementById('results').innerHTML=debug(Modernizr,0);
+</code></pre>
+<p>测试结果如下,可以根据属性自取所需</p>
+<div id="results">
+</div>
+<script type="text/javascript">
+  function debug(obj,level){
+    var str='';
+    for(i in obj){
+      if(typeof(obj[i])=='object'){
+        space = level + 1;
+        str+=i;
+        str+='<br />';
+        str+=debug(obj[i],space)
+      }else if(typeof(obj[i])!='function'){
+        for(var x=0;x<level;x++){
+          str+='&nbsp;&nbsp;&nbsp;&nbsp;';
+        }
+        str+=i;
+        str+=":";
+        str+=obj[i];
+        str+='<br />';
+      }
+    }
+    return str;
+  }
+  document.getElementById('results').innerHTML=debug(Modernizr,0);
+</script>
+</body>
+</html>

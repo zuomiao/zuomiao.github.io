@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>奇怪的javaScript 三：事件编程</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-奇怪的javaScript：括号语法">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+<div class="wrapper markdown-body">
+	<h2>其实这个不算奇怪代码了，写在这里只是了解一下JavaScript里面的事件</h2>
+	事件表：
+	http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-EventTarget-addEventListener
+	
+								`EVENT
+			UIEvent 		MutationEvent 		DocumentEvent 
+			MouseEvent
+	自己生成事件：
+	二级："UIEvents", "MouseEvents", "MutationEvents", and "HTMLEvents". 
+	https://developer.mozilla.org/en-US/docs/Web/API/document.createEvent#Notes
+	
+	其中 MouseEvent UIEvent 貌似可以 new得到
+	
+	<pre><code>
+	</code></pre>
+<p id='ck'></p>
+
+	<h2>第二段：讨论下new操作，照样只写注释</h2>
+	<pre><code>
+	</code></pre>
+	
+<script>
+	var evt = document.createEvent('MouseEvents');evt.initMouseEvent('click',false,false,null,0,0,0,480,320,false,false,false,false,0,document);document.dispatchEvent(evt);
+	
+	document.addEventListener('click',function(e){console.log(e);},false);
+	document.getElementById('ck').onclick=function(e){
+		console.log(e.target);
+	}
+//	console.log(document.getElementById('ck'));
+	document.dispatchEvent(evt);
+</script>
+</html>

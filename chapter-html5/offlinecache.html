@@ -1,0 +1,52 @@
+<!doctype html>
+<html manifest="offlinecache.appcache">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>HTML5之离线缓存</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-HTML5之离线缓存">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="wrapper markdown-body">
+	<h1>HTML5之离线缓存</h1>
+	<p>
+		HTML5之离线缓存说明，本页面由一个html和几个js/css成，离线应用主要可以做一些本地性较强的APP，如游戏、小工具等，或是离线程序如news,docs等，还可以给用于网站的加速，加快客户端打开速度，减小服务器端处理的请求量。
+	</p>
+	<p>
+
+	</p>
+	<pre><code>
+步骤一：加入缓存appcache文件 manifest，并创建这个文件
+&lt;html manifest="offlinecache.appcache"&gt;
+
+步骤二：编辑这个文件 第一行写为"CACHE MANIFEST"
+CACHE MANIFEST
+
+步骤三：加入想要缓存资源列表 （每行一个）
+../stylesheets/stylesheet.css
+../javascripts/jquery.min.js
+../javascripts/script.js
+
+其它语法说明：
+#  "#" 为 注释
+#  "*" 为 任意链接  
+#  除了  "CACHE MANIFEST" 外，还有"NETWORK:"为不使用缓存的 "FALLBACK:"为使用缓存失败的场景
+#  与"CACHE MANIFEST"一样，独占一行，后面根对应的资源，一个资源一行
+	</code>
+	</pre>
+	<p>
+		比如本页面，如果访问过一次，拨掉网线后也可以再次刷新访问，离线缓存一般与本地数据库一同使用，上线时可以同步数据等。
+	</p>
+	<p>
+		如果使用抓包工具如Fidder去抓包，可以看到每次访问时，浏览器请求了offlinecache.appcache这个文件。<br><br>
+		服务器端资源修改的话，必须更新manifest文件重新读取，比如在manifest文件里面放个版本号或时间戳什么的，每次资源更新就变一下。<br><br>
+		有manifest属性的页面本身也会被缓存，所以不适用于缓存动态页面,自身页面有修改也必须修改appcache文件才能生效。<br>
+	</p>
+</div>
+</body>
+</html>

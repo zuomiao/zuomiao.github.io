@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" media="screen"/>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <script type="text/javascript" src="../javascripts/script.js"></script>
+  <title>HTML5之网络状态测试DEMO</title>
+  <meta name="author" content="http://www.xdnote.com/" />
+  <meta name="description" content="X.D的试验室-HTML5之网络状态测试DEMO">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+	<style type="text/css">
+		.result{
+			margin: 50 auto;
+			font-size: 24px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div class="wrapper markdown-body">
+
+	<div class="result" id="result">
+	<section id="connectbar">连通状态：<span id="connect"></span></section>
+	<section id="statusbar">网络连接：<span  id="status"></span>
+	</div>
+	<pre><code>var supportNet=(typeof(navigator.onLine)=='boolean');
+var supportCheck=navigator.network&amp;&amp;navigator.network.connection;
+if(!supportNet){
+	document.getElementById('connectbar').innerHTML='什么破烂浏览器，不支持HTML5';
+}
+if(typeof(supportCheck)=='undefined'){
+	document.getElementById('statusbar').innerHTML='啊哎！你的系统或浏览器不支持。嘻嘻。';
+}
+function checkNet(){
+	if(supportNet){
+		document.getElementById('connect').innerHTML=navigator.onLine?'在线 online':'离线 offline';
+	}	
+	if(supportCheck){
+	    var networkState = navigator.network.connection.type;
+	    var states = {};
+	    states[Connection.UNKNOWN]  = '未知网络';
+	    states[Connection.ETHERNET] = '网线';
+	    states[Connection.WIFI]     = 'WIFI网络';
+	    states[Connection.CELL_2G]  = '2G网络';
+	    states[Connection.CELL_3G]  = '3G网络';
+	    states[Connection.CELL_4G]  = '4G网络';
+	    states[Connection.NONE]     = '没有网络';
+		document.getElementById('status').innerHTML=states[networkState];
+	}
+}
+window.setInterval(checkNet,500);
+	</code>
+	</pre>
+</div>
+</body>
+<script>
+//var supportNet=navigator.onLine||false; 之前写成了这样，发现有点小问题
+var supportNet=(typeof(navigator.onLine)=='boolean');
+var supportCheck=navigator.connection||(navigator.network&&navigator.network.connection);
+if(!supportNet){
+	document.getElementById('connectbar').innerHTML='什么破烂浏览器，不支持HTML5';
+}
+if(typeof(supportCheck)=='undefined'){
+	document.getElementById('statusbar').innerHTML='啊哎！你的系统或浏览器不支持。嘻嘻。';
+}
+function checkNet(){
+	if(supportNet){
+		document.getElementById('connect').innerHTML=navigator.onLine?'在线 online':'离线 offline';
+	}	
+	if(supportCheck){
+	    var networkState = supportCheck.type;
+	    var states = {};
+	    states[Connection.UNKNOWN]  = '未知网络';
+	    states[Connection.ETHERNET] = '网线';
+	    states[Connection.WIFI]     = 'WIFI网络';
+	    states[Connection.CELL_2G]  = '2G网络';
+	    states[Connection.CELL_3G]  = '3G网络';
+	    states[Connection.CELL_4G]  = '4G网络';
+	    states[Connection.NONE]     = '没有网络';
+		document.getElementById('status').innerHTML=states[networkState];
+	}
+}
+window.setInterval(checkNet,500);
+</script>
+</html>
